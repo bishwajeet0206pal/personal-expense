@@ -252,6 +252,10 @@ iframe[id*="netlify"],
       <span style="color:var(--accent)">✦</span> Hisaab Kitaab
     </div>
     <div style="display:flex;align-items:center;gap:8px">
+      <button id="btnGrokSetup" type="button" title="Grok (xAI) Configuration" style="background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .2s ease">
+        <span id="grokDot" style="width:7px;height:7px;border-radius:50%;background:#94A3B8;display:inline-block"></span>
+        <span>Grok</span>
+      </button>
       <div id="userHeaderBadge" class="user-badge hidden">
         <span id="userAccountName" class="user-name">User</span>
         <button id="logoutBtn" class="btn-logout" type="button">Logout</button>
@@ -446,6 +450,34 @@ iframe[id*="netlify"],
       <button id="quickLoginBtn" class="btn ghost" type="button" style="width:100%;font-size:12px;padding:8px">
         ⚡ Quick Login (Bishwajeet)
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- Grok AI Setup Modal -->
+<div id="grokModal" class="account-gate hidden">
+  <div class="account-card" style="max-width:420px;text-align:left">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:22px">⚡</span>
+        <div style="font-size:18px;font-weight:800;color:var(--ink)">Grok AI Setup</div>
+      </div>
+      <button id="closeGrokModal" type="button" style="border:0;background:none;font-size:22px;line-height:1;cursor:pointer;color:var(--mute)">&times;</button>
+    </div>
+    <div style="font-size:12.5px;color:var(--mute);line-height:1.5;margin-bottom:16px">
+      Power your receipt extraction with xAI's <strong>Grok Vision</strong>. Your API key is stored securely in your browser and used to read bill details.
+    </div>
+    
+    <label for="inputGrokKey" style="margin-top:0;font-size:12.5px;font-weight:700">xAI Grok API Key</label>
+    <input id="inputGrokKey" type="password" placeholder="xai-..." style="margin-bottom:12px;font-family:monospace;font-size:12px">
+    
+    <div style="font-size:11.5px;color:var(--mute);margin-bottom:16px;line-height:1.4">
+      Get your key from <a href="https://console.x.ai" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600">console.x.ai</a>. Alternatively, set <code>GROK_API_KEY</code> in your Vercel Environment Variables.
+    </div>
+
+    <div style="display:flex;gap:8px">
+      <button id="btnSaveGrokKey" type="button" class="btn primary" style="flex:1;margin-top:0;padding:10px;font-size:13px">Save Key</button>
+      <button id="btnClearGrokKey" type="button" class="btn ghost" style="padding:10px 14px;font-size:13px">Clear</button>
     </div>
   </div>
 </div>
@@ -693,6 +725,70 @@ iframe[id*="netlify"],
         localStorage.setItem(STORAGE_KEY, JSON.stringify(clean));
       }
     }catch(e){}
+  }
+
+  // --- Grok (xAI) API Management ---
+  function getGrokApiKey(){
+    try{ return (localStorage.getItem("grok_api_key") || "").trim(); }catch(e){ return ""; }
+  }
+
+  function setGrokApiKey(k){
+    try{
+      if(k && k.trim()) localStorage.setItem("grok_api_key", k.trim());
+      else localStorage.removeItem("grok_api_key");
+    }catch(e){}
+    updateGrokUI();
+  }
+
+  function updateGrokUI(){
+    var dot = $("grokDot");
+    var hasKey = Boolean(getGrokApiKey());
+    if(dot){
+      dot.style.background = hasKey ? "#10B981" : "#94A3B8";
+      dot.style.boxShadow = hasKey ? "0 0 6px rgba(16,185,129,0.5)" : "none";
+    }
+  }
+
+  function initGrokUI(){
+    var btn = $("btnGrokSetup");
+    var modal = $("grokModal");
+    var closeBtn = $("closeGrokModal");
+    var saveBtn = $("btnSaveGrokKey");
+    var clearBtn = $("btnClearGrokKey");
+    var input = $("inputGrokKey");
+
+    if(btn && modal){
+      btn.onclick = function(){
+        if(input) input.value = getGrokApiKey();
+        modal.classList.remove("hidden");
+        if(input) input.focus();
+      };
+    }
+    if(closeBtn && modal){
+      closeBtn.onclick = function(){ modal.classList.add("hidden"); };
+    }
+    if(modal){
+      modal.onclick = function(e){
+        if(e.target === modal) modal.classList.add("hidden");
+      };
+    }
+    if(saveBtn){
+      saveBtn.onclick = function(){
+        var val = input ? input.value : "";
+        setGrokApiKey(val);
+        if(modal) modal.classList.add("hidden");
+        toast(val.trim() ? "Grok API key saved!" : "Grok API key cleared");
+      };
+    }
+    if(clearBtn){
+      clearBtn.onclick = function(){
+        if(input) input.value = "";
+        setGrokApiKey("");
+        if(modal) modal.classList.add("hidden");
+        toast("Grok API key removed");
+      };
+    }
+    updateGrokUI();
   }
 
   // --- Local Data Store (Primary & Offline-ready) ---
@@ -1266,10 +1362,13 @@ iframe[id*="netlify"],
         try{
           var shrunk = await shrink(file);
           var b64 = await toB64(shrunk);
+          var grokKey = getGrokApiKey();
+          var payload = { images: [b64] };
+          if(grokKey) payload.grokApiKey = grokKey;
           var res = await fetch("/api/read", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ images: [b64] })
+            body: JSON.stringify(payload)
           });
           if(res.ok){
             var data = await res.json();
@@ -1604,10 +1703,13 @@ iframe[id*="netlify"],
       try{
         var sh = await shrink(it.file);
         var b64 = await toB64(sh);
+        var grokKey = getGrokApiKey();
+        var payload = { images: [b64] };
+        if(grokKey) payload.grokApiKey = grokKey;
         var r = await fetch("/api/read", {
           method: "POST",
           headers: {"Content-Type":"application/json"},
-          body: JSON.stringify({ images: [b64] })
+          body: JSON.stringify(payload)
         });
         if(r.ok){
           var d = await r.json();
@@ -2727,6 +2829,7 @@ iframe[id*="netlify"],
   initTheme();
   renderCategoryGrid();
   initAuth();
+  initGrokUI();
   switchView("input");
 })();
 </script>

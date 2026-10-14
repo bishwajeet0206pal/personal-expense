@@ -1,6 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
 
-// Models are tried in order. Set AI_MODEL on Netlify to force one.
 const MODELS = [process.env.AI_MODEL, "claude-sonnet-4-5-20250929", "claude-sonnet-4-6", "claude-haiku-4-5"].filter(Boolean);
 
 const PROMPT =
@@ -56,6 +55,61 @@ function parseModelJson(text) {
   return JSON.parse(s.slice(a, b + 1));
 }
 
+// Grok (xAI) API integration
+async function tryGrok(images, customKey) {
+  const key = customKey || process.env.GROK_API_KEY || process.env.XAI_API_KEY;
+  if (!key) return null;
+
+  const models = [
+    process.env.GROK_MODEL,
+    "grok-2-vision-1212",
+    "grok-2-vision-latest",
+    "grok-vision-beta"
+  ].filter(Boolean);
+
+  const content = images.map((data) => ({
+    type: "image_url",
+    image_url: {
+      url: `data:image/jpeg;base64,${data}`,
+      detail: "high"
+    }
+  }));
+  content.push({ type: "text", text: PROMPT });
+
+  for (const model of models) {
+    try {
+      const res = await fetch("https://api.x.ai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${key}`
+        },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: "user", content }],
+          temperature: 0.1
+        })
+      });
+
+      if (!res.ok) {
+        const errText = await res.text().catch(() => "");
+        console.warn(`Grok (${model}) HTTP ${res.status}:`, errText);
+        if (res.status === 404 || res.status === 400) continue;
+        throw new Error(`Grok HTTP ${res.status}`);
+      }
+
+      const data = await res.json();
+      const rawText = data?.choices?.[0]?.message?.content;
+      if (rawText) {
+        return { parsed: parseModelJson(rawText), model };
+      }
+    } catch (e) {
+      console.warn(`Grok (${model}) attempt failed:`, e.message);
+    }
+  }
+  return null;
+}
+
 async function tryGemini(images) {
   const key = process.env.GEMINI_API_KEY;
   if (!key) return null;
@@ -96,7 +150,20 @@ export default async (req) => {
   }
   if (totalBytes > 8_000_000) return json({ error: "too_big" }, 413);
 
-  // 1. Try Gemini if configured
+  // 1. Try Grok (xAI) if configured
+  const grokKey = (body && body.grokApiKey) || (req.headers && req.headers.get && (req.headers.get("x-grok-api-key") || req.headers.get("x-xai-api-key"))) || process.env.GROK_API_KEY || process.env.XAI_API_KEY;
+  if (grokKey) {
+    try {
+      const grokRes = await tryGrok(images, grokKey);
+      if (grokRes && grokRes.parsed) {
+        return formatResponse(grokRes.parsed, grokRes.model);
+      }
+    } catch (err) {
+      console.warn("Grok attempt failed:", err.message);
+    }
+  }
+
+  // 2. Try Gemini if configured
   if (process.env.GEMINI_API_KEY) {
     try {
       const parsed = await tryGemini(images);
@@ -106,7 +173,7 @@ export default async (req) => {
     }
   }
 
-  // 2. Try Anthropic if configured
+  // 3. Try Anthropic if configured
   if (process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_BASE_URL) {
     let client;
     try { client = new Anthropic(); } catch { client = null; }
@@ -131,7 +198,7 @@ export default async (req) => {
     }
   }
 
-  // 3. Fallback when no cloud API key is configured
+  // 4. Fallback when no cloud API key is configured
   return json({
     use_client_ocr: true,
     message: "No server AI API key configured; client-side OCR enabled."
