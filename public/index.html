@@ -218,6 +218,27 @@ input.bad,select.bad{border-color:var(--bad)}
   transition: all 0.3s ease;
 }
 
+/* Suppress Netlify floating drawer, badge, and feedback widgets */
+iframe#netlify-drawer,
+iframe[src*="netlify"],
+iframe[id*="netlify"],
+[data-netlify-deploy-id],
+.netlify-feedback-badge,
+[class*="netlify-drawer"],
+[id*="netlify-drawer"],
+#netlify-badge,
+.netlify-badge {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+  z-index: -9999 !important;
+}
+
 .hidden{display:none !important}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -437,6 +458,21 @@ input.bad,select.bad{border-color:var(--bad)}
 
 <script>
 (function(){
+  // --- Remove Netlify Drawer & Feedback Widget ---
+  (function removeNetlifyWidgets(){
+    function purge(){
+      var sel = 'iframe#netlify-drawer, iframe[src*="netlify"], iframe[id*="netlify"], [data-netlify-deploy-id], [class*="netlify-drawer"], [id*="netlify-drawer"], #netlify-badge, .netlify-badge';
+      var els = document.querySelectorAll(sel);
+      for(var i=0; i<els.length; i++){
+        try{ els[i].remove(); }catch(e){ els[i].style.display = "none"; }
+      }
+    }
+    purge();
+    if(window.MutationObserver){
+      new MutationObserver(purge).observe(document.documentElement, { childList: true, subtree: true });
+    }
+  })();
+
   // --- Configuration & Constants ---
   var SB_URL="https://owcarcnmtmkrewrffciw.supabase.co";
   var SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93Y2FyY25tdG1rcmV3cmZmY2l3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2Nzc3NzYsImV4cCI6MjEwNzI1Mzc3Nn0.rUcuwUrypLZyAdBiYWBsMII23NKBhltM5YqMTZj9VA0";
