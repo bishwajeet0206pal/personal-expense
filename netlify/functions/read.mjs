@@ -2,6 +2,8 @@ import Anthropic from "@anthropic-ai/sdk";
 
 const MODELS = [process.env.AI_MODEL, "claude-sonnet-4-5-20250929", "claude-sonnet-4-6", "claude-haiku-4-5"].filter(Boolean);
 
+const DEFAULT_GROQ_KEY = process.env.GROQ_API_KEY || "";
+
 const PROMPT =
   "These images are an Indian invoice, bill, receipt, or payment confirmation. " +
   'Reply with ONLY valid JSON: {"total": number or null, "merchant": string or null, "date": "YYYY-MM-DD" or null, "category": string or null}. ' +
@@ -55,30 +57,22 @@ function parseModelJson(text) {
   return JSON.parse(s.slice(a, b + 1));
 }
 
-// Grok (xAI) API integration
-async function tryGrok(images, customKey) {
-  const key = customKey || process.env.GROK_API_KEY || process.env.XAI_API_KEY;
-  if (!key) return null;
+// Groq API integration (Base URL: https://api.groq.com/openai/v1)
+async function tryGroq(text, customKey) {
+  const key = customKey || process.env.GROQ_API_KEY || DEFAULT_GROQ_KEY;
+  if (!key || !text || typeof text !== "string" || !text.trim()) return null;
 
   const models = [
-    process.env.GROK_MODEL,
-    "grok-2-vision-1212",
-    "grok-2-vision-latest",
-    "grok-vision-beta"
+    process.env.GROQ_MODEL || "openai/gpt-oss-120b",
+    "qwen/qwen3.8-27b",
+    "openai/gpt-oss-20b"
   ].filter(Boolean);
 
-  const content = images.map((data) => ({
-    type: "image_url",
-    image_url: {
-      url: `data:image/jpeg;base64,${data}`,
-      detail: "high"
-    }
-  }));
-  content.push({ type: "text", text: PROMPT });
+  const cleanText = text.slice(0, 10000);
 
   for (const model of models) {
     try {
-      const res = await fetch("https://api.x.ai/v1/chat/completions", {
+      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,25 +80,40 @@ async function tryGrok(images, customKey) {
         },
         body: JSON.stringify({
           model,
-          messages: [{ role: "user", content }],
+          messages: [
+            {
+              role: "system",
+              content:
+                "You are an expert Indian invoice reader. Extract total (numeric), merchant (string), date (YYYY-MM-DD), and category from the invoice text.\n" +
+                "CRITICAL RULES:\n" +
+                "1. Total MUST be the final grand total from the primary item table (or verify with Amount in Words, e.g. 'Rupees Two Hundred Fifty Eight Only' -> 258).\n" +
+                "2. COMPLETELY IGNORE secondary tables such as Annexure, handling charges, surge charges, or tax breakdowns.\n" +
+                "3. Category MUST be one of exactly 6 fixed major categories: 'Groceries', 'Food & Dining', 'Shopping', 'Bills & Utilities', 'Travel & Transport', 'Healthcare & Medical'.\n" +
+                "4. Reply with ONLY valid JSON: {\"total\": number, \"merchant\": string, \"date\": string, \"category\": string}."
+            },
+            {
+              role: "user",
+              content: cleanText
+            }
+          ],
+          response_format: { type: "json_object" },
           temperature: 0.1
         })
       });
 
       if (!res.ok) {
         const errText = await res.text().catch(() => "");
-        console.warn(`Grok (${model}) HTTP ${res.status}:`, errText);
-        if (res.status === 404 || res.status === 400) continue;
-        throw new Error(`Grok HTTP ${res.status}`);
+        console.warn(`Groq (${model}) HTTP ${res.status}:`, errText);
+        continue;
       }
 
       const data = await res.json();
       const rawText = data?.choices?.[0]?.message?.content;
       if (rawText) {
-        return { parsed: parseModelJson(rawText), model };
+        return { parsed: parseModelJson(rawText), model: "groq:" + model };
       }
     } catch (e) {
-      console.warn(`Grok (${model}) attempt failed:`, e.message);
+      console.warn(`Groq (${model}) error:`, e.message);
     }
   }
   return null;
@@ -140,8 +149,35 @@ export default async (req) => {
 
   let body;
   try { body = await req.json(); } catch { return json({ error: "bad_request" }, 400); }
-  const { images } = body || {};
-  if (!Array.isArray(images) || images.length < 1 || images.length > 3) return json({ error: "bad_request" }, 400);
+  const { images, text } = body || {};
+
+  // 1. Try Groq (Primary ultra-fast inference with openai/gpt-oss-120b)
+  const groqKey = (body && (body.groqApiKey || body.grokApiKey)) || 
+                  (req.headers && req.headers.get && (req.headers.get("x-groq-api-key") || req.headers.get("x-grok-api-key"))) || 
+                  process.env.GROQ_API_KEY || 
+                  DEFAULT_GROQ_KEY;
+
+  if (groqKey && text && typeof text === "string" && text.trim().length > 10) {
+    try {
+      const groqRes = await tryGroq(text, groqKey);
+      if (groqRes && groqRes.parsed && groqRes.parsed.total) {
+        return formatResponse(groqRes.parsed, groqRes.model);
+      }
+    } catch (err) {
+      console.warn("Groq attempt failed:", err.message);
+    }
+  }
+
+  // If no images provided, check if Groq parsed text
+  if (!Array.isArray(images) || images.length < 1) {
+    if (groqKey && text) {
+      const groqRes = await tryGroq(text, groqKey);
+      if (groqRes && groqRes.parsed) {
+        return formatResponse(groqRes.parsed, groqRes.model);
+      }
+    }
+    return json({ error: "bad_request" }, 400);
+  }
 
   let totalBytes = 0;
   for (const im of images) {
@@ -149,19 +185,6 @@ export default async (req) => {
     totalBytes += im.length;
   }
   if (totalBytes > 8_000_000) return json({ error: "too_big" }, 413);
-
-  // 1. Try Grok (xAI) if configured
-  const grokKey = (body && body.grokApiKey) || (req.headers && req.headers.get && (req.headers.get("x-grok-api-key") || req.headers.get("x-xai-api-key"))) || process.env.GROK_API_KEY || process.env.XAI_API_KEY;
-  if (grokKey) {
-    try {
-      const grokRes = await tryGrok(images, grokKey);
-      if (grokRes && grokRes.parsed) {
-        return formatResponse(grokRes.parsed, grokRes.model);
-      }
-    } catch (err) {
-      console.warn("Grok attempt failed:", err.message);
-    }
-  }
 
   // 2. Try Gemini if configured
   if (process.env.GEMINI_API_KEY) {

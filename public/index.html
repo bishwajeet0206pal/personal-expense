@@ -64,8 +64,20 @@ label{display:block;font-size:11.5px;font-weight:700;color:var(--mute);margin:14
 input,select{width:100%;font:inherit;color:var(--ink);background:var(--card-subtle);border:1.5px solid var(--line);border-radius:var(--radius-md);padding:13px 14px;min-height:48px;transition:border-color .2s,box-shadow .2s}
 input:focus,select:focus{border-color:var(--accent);background:#FFFFFF;outline:none;box-shadow:0 0 0 3px rgba(255,102,54,0.12)}
 input.bad,select.bad{border-color:var(--bad)}
-.amt{font-size:34px;font-weight:800;letter-spacing:-.03em;padding:12px 16px;color:var(--ink);background:#FFFFFF;border-color:var(--line-strong)}
-.row{display:flex;gap:10px}.row>*{flex:1;min-width:0}
+.row{display:flex;gap:14px;align-items:flex-start}
+.row>*{flex:1;min-width:0}
+@media (max-width: 580px){
+  .row{display:flex;flex-direction:column;gap:0}
+  .row>*{width:100%;margin-bottom:2px}
+  .row label{margin-top:12px}
+}
+input[type="date"]{
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
+  min-height:48px;
+  width:100%;
+}
 
 .btn{width:100%;border:0;border-radius:var(--radius-pill);padding:14px;font:inherit;font-weight:700;font-size:15px;background:var(--accent);color:var(--accent-ink);margin-top:16px;min-height:50px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(255,102,54,0.25);transition:all .2s ease}
 .btn:hover{background:var(--accent-hover);box-shadow:0 6px 18px rgba(255,102,54,0.32);transform:translateY(-1px)}
@@ -252,9 +264,9 @@ iframe[id*="netlify"],
       <span style="color:var(--accent)">✦</span> Hisaab Kitaab
     </div>
     <div style="display:flex;align-items:center;gap:8px">
-      <button id="btnGrokSetup" type="button" title="Grok (xAI) Configuration" style="background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .2s ease">
-        <span id="grokDot" style="width:7px;height:7px;border-radius:50%;background:#94A3B8;display:inline-block"></span>
-        <span>Grok</span>
+      <button id="btnGroqSetup" type="button" title="Groq AI (Fast Inference)" style="background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .2s ease">
+        <span id="groqDot" style="width:7px;height:7px;border-radius:50%;background:#10B981;box-shadow:0 0 6px rgba(16,185,129,0.5);display:inline-block"></span>
+        <span>Groq AI</span>
       </button>
       <div id="userHeaderBadge" class="user-badge hidden">
         <span id="userAccountName" class="user-name">User</span>
@@ -454,30 +466,33 @@ iframe[id*="netlify"],
   </div>
 </div>
 
-<!-- Grok AI Setup Modal -->
-<div id="grokModal" class="account-gate hidden">
+<!-- Groq AI Setup Modal -->
+<div id="groqModal" class="account-gate hidden">
   <div class="account-card" style="max-width:420px;text-align:left">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
       <div style="display:flex;align-items:center;gap:8px">
         <span style="font-size:22px">⚡</span>
-        <div style="font-size:18px;font-weight:800;color:var(--ink)">Grok AI Setup</div>
+        <div>
+          <div style="font-size:18px;font-weight:800;color:var(--ink)">Groq AI Setup</div>
+          <div style="font-size:11.5px;color:var(--accent);font-weight:700">Model: openai/gpt-oss-120b</div>
+        </div>
       </div>
-      <button id="closeGrokModal" type="button" style="border:0;background:none;font-size:22px;line-height:1;cursor:pointer;color:var(--mute)">&times;</button>
+      <button id="closeGroqModal" type="button" style="border:0;background:none;font-size:22px;line-height:1;cursor:pointer;color:var(--mute)">&times;</button>
     </div>
-    <div style="font-size:12.5px;color:var(--mute);line-height:1.5;margin-bottom:16px">
-      Power your receipt extraction with xAI's <strong>Grok Vision</strong>. Your API key is stored securely in your browser and used to read bill details.
+    <div style="font-size:12.5px;color:var(--mute);line-height:1.5;margin-bottom:14px">
+      Powered by <strong>Groq Cloud</strong> with ultra-fast inference (base URL: <code>https://api.groq.com/openai/v1</code>). Your key is pre-configured and active!
     </div>
     
-    <label for="inputGrokKey" style="margin-top:0;font-size:12.5px;font-weight:700">xAI Grok API Key</label>
-    <input id="inputGrokKey" type="password" placeholder="xai-..." style="margin-bottom:12px;font-family:monospace;font-size:12px">
+    <label for="inputGroqKey" style="margin-top:0;font-size:12.5px;font-weight:700">Groq API Key (starts with gsk_)</label>
+    <input id="inputGroqKey" type="password" placeholder="gsk_..." style="margin-bottom:12px;font-family:monospace;font-size:12px">
     
     <div style="font-size:11.5px;color:var(--mute);margin-bottom:16px;line-height:1.4">
-      Get your key from <a href="https://console.x.ai" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600">console.x.ai</a>. Alternatively, set <code>GROK_API_KEY</code> in your Vercel Environment Variables.
+      Default model: <code>openai/gpt-oss-120b</code>. You can also configure <code>GROQ_API_KEY</code> on Vercel.
     </div>
 
     <div style="display:flex;gap:8px">
-      <button id="btnSaveGrokKey" type="button" class="btn primary" style="flex:1;margin-top:0;padding:10px;font-size:13px">Save Key</button>
-      <button id="btnClearGrokKey" type="button" class="btn ghost" style="padding:10px 14px;font-size:13px">Clear</button>
+      <button id="btnSaveGroqKey" type="button" class="btn primary" style="flex:1;margin-top:0;padding:10px;font-size:13px">Save Key</button>
+      <button id="btnClearGroqKey" type="button" class="btn ghost" style="padding:10px 14px;font-size:13px">Reset to Default</button>
     </div>
   </div>
 </div>
@@ -727,39 +742,44 @@ iframe[id*="netlify"],
     }catch(e){}
   }
 
-  // --- Grok (xAI) API Management ---
-  function getGrokApiKey(){
-    try{ return (localStorage.getItem("grok_api_key") || "").trim(); }catch(e){ return ""; }
-  }
+  // --- Groq Cloud (openai/gpt-oss-120b) API Management ---
+  var DEFAULT_GROQ_KEY = "";
 
-  function setGrokApiKey(k){
+  function getGroqApiKey(){
     try{
-      if(k && k.trim()) localStorage.setItem("grok_api_key", k.trim());
-      else localStorage.removeItem("grok_api_key");
-    }catch(e){}
-    updateGrokUI();
+      var saved = localStorage.getItem("groq_api_key");
+      return (saved != null && saved !== "") ? saved.trim() : DEFAULT_GROQ_KEY;
+    }catch(e){ return DEFAULT_GROQ_KEY; }
   }
 
-  function updateGrokUI(){
-    var dot = $("grokDot");
-    var hasKey = Boolean(getGrokApiKey());
+  function setGroqApiKey(k){
+    try{
+      if(k && k.trim()) localStorage.setItem("groq_api_key", k.trim());
+      else localStorage.removeItem("groq_api_key");
+    }catch(e){}
+    updateGroqUI();
+  }
+
+  function updateGroqUI(){
+    var dot = $("groqDot");
+    var hasKey = Boolean(getGroqApiKey());
     if(dot){
       dot.style.background = hasKey ? "#10B981" : "#94A3B8";
       dot.style.boxShadow = hasKey ? "0 0 6px rgba(16,185,129,0.5)" : "none";
     }
   }
 
-  function initGrokUI(){
-    var btn = $("btnGrokSetup");
-    var modal = $("grokModal");
-    var closeBtn = $("closeGrokModal");
-    var saveBtn = $("btnSaveGrokKey");
-    var clearBtn = $("btnClearGrokKey");
-    var input = $("inputGrokKey");
+  function initGroqUI(){
+    var btn = $("btnGroqSetup");
+    var modal = $("groqModal");
+    var closeBtn = $("closeGroqModal");
+    var saveBtn = $("btnSaveGroqKey");
+    var clearBtn = $("btnClearGroqKey");
+    var input = $("inputGroqKey");
 
     if(btn && modal){
       btn.onclick = function(){
-        if(input) input.value = getGrokApiKey();
+        if(input) input.value = getGroqApiKey();
         modal.classList.remove("hidden");
         if(input) input.focus();
       };
@@ -775,20 +795,20 @@ iframe[id*="netlify"],
     if(saveBtn){
       saveBtn.onclick = function(){
         var val = input ? input.value : "";
-        setGrokApiKey(val);
+        setGroqApiKey(val);
         if(modal) modal.classList.add("hidden");
-        toast(val.trim() ? "Grok API key saved!" : "Grok API key cleared");
+        toast("Groq API key updated!");
       };
     }
     if(clearBtn){
       clearBtn.onclick = function(){
-        if(input) input.value = "";
-        setGrokApiKey("");
+        setGroqApiKey(DEFAULT_GROQ_KEY);
+        if(input) input.value = DEFAULT_GROQ_KEY;
         if(modal) modal.classList.add("hidden");
-        toast("Grok API key removed");
+        toast("Reset to default Groq key");
       };
     }
-    updateGrokUI();
+    updateGroqUI();
   }
 
   // --- Local Data Store (Primary & Offline-ready) ---
@@ -1343,58 +1363,51 @@ iframe[id*="netlify"],
     setProg("Opening bill...", 20);
 
     try{
-      var extracted = null;
+      var billText = null;
 
-      // 1. If PDF: Extract embedded text first (super fast and accurate)
+      // 1. If PDF: Extract embedded text first
       if(isPdf){
-        setProg("Extracting text from PDF...", 35);
+        setProg("Extracting text from PDF...", 30);
         try{
-          var pdfText = await extractTextFromPdf(file);
-          if(pdfText && pdfText.trim().length > 20){
-            extracted = parseInvoiceText(pdfText);
-          }
+          billText = await extractTextFromPdf(file);
         }catch(e){console.warn("PDF text error", e);}
-      }
-
-      // 2. If not extracted or is image: try Serverless function (/api/read)
-      if(!extracted || !extracted.amount){
-        setProg("Reading bill...", 50);
-        try{
-          var shrunk = await shrink(file);
-          var b64 = await toB64(shrunk);
-          var grokKey = getGrokApiKey();
-          var payload = { images: [b64] };
-          if(grokKey) payload.grokApiKey = grokKey;
-          var res = await fetch("/api/read", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(payload)
-          });
-          if(res.ok){
-            var data = await res.json();
-            if(data && (data.total || data.merchant)){
-              extracted = {
-                amount: data.total,
-                merchant: data.merchant,
-                date: data.date,
-                category: data.category,
-                items: data.items || []
-              };
-            }
-          }
-        }catch(e){console.warn("API read error", e);}
-      }
-
-      // 3. Client-Side OCR Fallback (Tesseract.js) if still needed
-      if((!extracted || !extracted.amount) && isImg){
-        setProg("Running OCR on receipt...", 65);
+      } else if(isImg){
+        setProg("Scanning receipt...", 35);
         try{
           var ocrBlob = await shrink(file);
-          var ocrText = await extractTextWithTesseract(ocrBlob);
-          if(ocrText && ocrText.trim().length > 15){
-            extracted = parseInvoiceText(ocrText);
-          }
+          billText = await extractTextWithTesseract(ocrBlob);
         }catch(e){console.warn("OCR error", e);}
+      }
+
+      // 2. Read bill with Groq AI (ultra-fast model openai/gpt-oss-120b)
+      setProg("Reading with Groq AI...", 65);
+      try{
+        var shrunk = await shrink(file);
+        var b64 = await toB64(shrunk);
+        var groqKey = getGroqApiKey();
+        var payload = { images: [b64], text: billText || "" };
+        if(groqKey) payload.groqApiKey = groqKey;
+        var res = await fetch("/api/read", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(payload)
+        });
+        if(res.ok){
+          var data = await res.json();
+          if(data && (data.total || data.merchant)){
+            extracted = {
+              amount: data.total,
+              merchant: data.merchant,
+              date: data.date,
+              category: data.category
+            };
+          }
+        }
+      }catch(e){console.warn("API read error", e);}
+
+      // 3. Client-Side Parsing Fallback if API was unavailable
+      if((!extracted || !extracted.amount) && billText){
+        extracted = parseInvoiceText(billText);
       }
 
       if(tok !== readToken) return;
@@ -1703,9 +1716,9 @@ iframe[id*="netlify"],
       try{
         var sh = await shrink(it.file);
         var b64 = await toB64(sh);
-        var grokKey = getGrokApiKey();
-        var payload = { images: [b64] };
-        if(grokKey) payload.grokApiKey = grokKey;
+        var groqKey = getGroqApiKey();
+        var payload = { images: [b64], text: (typeof txt === "string" ? txt : "") };
+        if(groqKey) payload.groqApiKey = groqKey;
         var r = await fetch("/api/read", {
           method: "POST",
           headers: {"Content-Type":"application/json"},
@@ -1714,7 +1727,7 @@ iframe[id*="netlify"],
         if(r.ok){
           var d = await r.json();
           if(d && (d.total || d.merchant)){
-            parsed = { amount: d.total, merchant: d.merchant, date: d.date, category: d.category, items: d.items||[] };
+            parsed = { amount: d.total, merchant: d.merchant, date: d.date, category: d.category };
           }
         }
       }catch(e){}
@@ -2829,7 +2842,7 @@ iframe[id*="netlify"],
   initTheme();
   renderCategoryGrid();
   initAuth();
-  initGrokUI();
+  initGroqUI();
   switchView("input");
 })();
 </script>
