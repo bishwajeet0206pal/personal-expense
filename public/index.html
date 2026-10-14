@@ -1,0 +1,2698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Hisaab Kitaab">
+<title>Hisaab Kitaab</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#2A6F6B">
+<style>
+:root{
+  /* Headspace Warm Organic Light Theme */
+  --bg: #F7F5F0;                /* Warm oatmeal/sand canvas */
+  --card: #FFFFFF;              /* Pure white surface */
+  --card-subtle: #FAF8F5;       /* Warm secondary surface */
+  --ink: #1E2229;               /* Deep warm charcoal */
+  --mute: #787E8B;              /* Soft muted warm slate */
+  --line: #EBE6DC;              /* Soft organic border */
+  --line-strong: #DDD7CB;       /* Defined border */
+  
+  /* Headspace Warm Accents */
+  --accent: #FF6636;            /* Headspace Signature Sunset Orange */
+  --accent-hover: #F05523;
+  --accent-light: #FFF0EB;      /* Warm peach tint */
+  --accent-ink: #FFFFFF;
+  
+  --teal: #008775;              /* Mindful Emerald / Teal */
+  --teal-light: #E6F5F2;
+  --good: #008775;
+  --good-light: #E6F5F2;
+  --bad: #E04836;
+  --bad-light: #FDEEEB;
+  --warn: #EAA023;
+  --warn-light: #FEF7E8;
+  
+  --shadow-sm: 0 2px 6px rgba(30,34,41,0.03);
+  --shadow-md: 0 6px 20px -2px rgba(30,34,41,0.05), 0 2px 6px -1px rgba(30,34,41,0.02);
+  --shadow-lg: 0 12px 32px -4px rgba(30,34,41,0.08), 0 4px 12px -2px rgba(30,34,41,0.03);
+  
+  --radius-xl: 24px;
+  --radius-lg: 18px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --radius-pill: 999px;
+  
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Plus Jakarta Sans","SF Pro Display","Inter",Roboto,sans-serif;font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+main{max-width:540px;margin:0 auto;padding:16px 16px 115px}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding:4px 0}
+.brand{font-size:22px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;color:var(--ink)}
+.brand-spark{color:var(--accent);font-size:20px}
+h1{font-size:24px;margin:6px 0 16px;font-weight:800;letter-spacing:-.025em;color:var(--ink)}
+h2{font-size:17px;margin:16px 0 10px;font-weight:700;color:var(--ink)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-xl);padding:22px 20px;margin-bottom:16px;box-shadow:var(--shadow-md)}
+.dropzone-label{font-size:11.5px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+label{display:block;font-size:11.5px;font-weight:700;color:var(--mute);margin:14px 0 6px;text-transform:uppercase;letter-spacing:.04em}
+input,select{width:100%;font:inherit;color:var(--ink);background:var(--card-subtle);border:1.5px solid var(--line);border-radius:var(--radius-md);padding:13px 14px;min-height:48px;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus{border-color:var(--accent);background:#FFFFFF;outline:none;box-shadow:0 0 0 3px rgba(255,102,54,0.12)}
+input.bad,select.bad{border-color:var(--bad)}
+.amt{font-size:34px;font-weight:800;letter-spacing:-.03em;padding:12px 16px;color:var(--ink);background:#FFFFFF;border-color:var(--line-strong)}
+.row{display:flex;gap:10px}.row>*{flex:1;min-width:0}
+
+.btn{width:100%;border:0;border-radius:var(--radius-pill);padding:14px;font:inherit;font-weight:700;font-size:15px;background:var(--accent);color:var(--accent-ink);margin-top:16px;min-height:50px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(255,102,54,0.25);transition:all .2s ease}
+.btn:hover{background:var(--accent-hover);box-shadow:0 6px 18px rgba(255,102,54,0.32);transform:translateY(-1px)}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);margin-top:8px;box-shadow:none}
+.btn.ghost:hover{background:var(--card-subtle);border-color:var(--line-strong);transform:none}
+.btn.sm{padding:7px 14px;font-size:12.5px;min-height:34px;width:auto;margin:0}
+
+.files{display:flex;gap:12px;margin-top:4px}
+.files label.pick{flex:1;margin:0;text-align:center;border:2px dashed #DDD7CB;background:var(--card-subtle);border-radius:var(--radius-lg);padding:16px 10px;color:var(--ink);font-size:13px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:all .2s ease}
+.files label.pick:hover{background:#FFFFFF;border-color:var(--accent);transform:translateY(-1px)}
+.files input{display:none}
+
+.chip{font-size:12.5px;color:var(--mute);margin-top:10px;word-break:break-word;line-height:1.4}
+.chip a{color:var(--accent);text-decoration:none;font-weight:700;margin-left:8px;cursor:pointer}
+.chip a:hover{text-decoration:underline}
+.ferr{font-size:12.5px;color:var(--bad);margin-top:10px;min-height:0;font-weight:600}
+.prog{margin-top:12px}
+.pl{font-size:12px;color:var(--ink);margin-bottom:6px;font-weight:700}
+.pb{height:8px;background:var(--card-subtle);border-radius:var(--radius-pill);overflow:hidden;border:1px solid var(--line)}
+.pb i{display:block;height:100%;width:0;background:var(--accent);border-radius:var(--radius-pill);transition:width .3s ease}
+
+/* Floating Headspace Navigation Bar */
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));width:calc(100% - 32px);max-width:320px;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:var(--radius-pill);padding:5px;display:flex;gap:6px;z-index:90;box-shadow:0 12px 32px -4px rgba(30,34,41,0.12),0 4px 12px -2px rgba(30,34,41,0.04)}
+.nav button{flex:1;border:0;background:transparent;color:var(--mute);font:inherit;font-weight:700;font-size:13px;padding:10px 14px;border-radius:var(--radius-pill);display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;transition:all .2s cubic-bezier(.4,0,.2,1)}
+.nav button.on{background:var(--ink);color:#FFFFFF;box-shadow:0 2px 8px rgba(30,34,41,0.15)}
+
+/* Dashboard KPI Grid */
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
+.kpi-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-xl);padding:18px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;justify-content:space-between}
+.kpi-label{font-size:11px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.05em}
+.kpi-val{font-size:26px;font-weight:800;letter-spacing:-.025em;margin-top:6px;line-height:1.1}
+.kpi-sub{font-size:11.5px;color:var(--mute);margin-top:6px;font-weight:500}
+.kpi-full{grid-column:span 2;background:linear-gradient(135deg, #FFFFFF 0%, #FFF9F6 100%);border-color:#F5EAE4;padding:22px 20px}
+.kpi-full .kpi-val{font-size:34px;color:var(--ink)}
+.kpi-inflow{background:#FAFDFB;border-color:#E2F2EE}
+.kpi-neutral{background:#FAF8F5;border-color:#EFECE6}
+
+/* Focus Infographic: Spending Velocity */
+.trend-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-xl);padding:20px;margin-bottom:16px;box-shadow:var(--shadow-md)}
+.trend-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.trend-title{font-size:16px;font-weight:800;letter-spacing:-.015em;color:var(--ink)}
+.trend-controls{display:flex;background:var(--bg);padding:3px;border-radius:var(--radius-pill);border:1px solid var(--line);gap:2px}
+.trend-tab{border:0;background:transparent;color:var(--mute);font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:var(--radius-pill);cursor:pointer;transition:all .15s}
+.trend-tab.active{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(30,34,41,0.08)}
+
+.trend-svg-wrap{position:relative;width:100%;height:210px;margin-top:4px}
+.trend-svg-wrap svg{width:100%;height:100%;overflow:visible}
+.chart-tooltip{position:absolute;background:var(--ink);color:#FFFFFF;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:600;pointer-events:none;transform:translate(-50%,-125%);white-space:nowrap;opacity:0;transition:opacity .15s;z-index:10;box-shadow:0 4px 12px rgba(30,34,41,0.18)}
+.chart-tooltip.on{opacity:1}
+.trend-comparison-strip{margin-top:12px;padding:10px 14px;border-radius:var(--radius-md);font-size:12px;line-height:1.4;background:var(--card-subtle);border:1px solid var(--line);color:var(--ink);font-weight:600}
+
+/* Visual 2: Category Expense Histogram */
+.bar-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-xl);padding:20px;margin-bottom:16px;box-shadow:var(--shadow-md)}
+.bar-graph-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:8px;flex-wrap:wrap}
+.bar-graph-title{font-size:16px;font-weight:800;letter-spacing:-.015em;color:var(--ink)}
+
+.histogram-wrap{position:relative;width:100%;background:var(--card-subtle);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px 8px 14px;margin-top:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.histogram-chart{display:flex;align-items:flex-end;justify-content:space-between;height:195px;min-width:540px;position:relative;padding-bottom:28px;border-bottom:1.5px solid var(--line)}
+.histogram-col{flex:1;min-width:48px;max-width:64px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative;cursor:pointer;padding:0 2px}
+.histogram-bar{width:100%;max-width:44px;min-width:36px;border-radius:12px 12px 4px 4px;transition:all .4s cubic-bezier(.4,0,.2,1);position:relative;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px}
+.histogram-bar.zero{height:6px;background:var(--line);border-radius:3px;opacity:.7;padding-bottom:0}
+.histogram-bar-label{font-size:9.5px;font-weight:800;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:42px;letter-spacing:-.01em;line-height:1.1;pointer-events:none}
+.histogram-bar.zero .histogram-bar-label.zero-label{position:absolute;bottom:10px;color:var(--mute);font-weight:700;font-size:9.5px;text-shadow:none}
+.histogram-axis{position:absolute;bottom:-24px;display:flex;flex-direction:column;align-items:center;width:100%}
+.histogram-amt{font-size:10.5px;font-weight:800;text-align:center;white-space:nowrap;letter-spacing:-.01em}
+.histogram-col:hover .histogram-bar:not(.zero){filter:brightness(1.1);box-shadow:0 6px 18px rgba(0,0,0,.15)}
+.histogram-col:hover .zero-label{color:var(--ink)}
+
+.cat-breakdown-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.cat-breakdown-pill{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:var(--radius-pill);background:var(--card-subtle);border:1px solid var(--line);color:var(--ink)}
+.cat-breakdown-dot{width:8px;height:8px;border-radius:50%}
+
+.everyday-cat-section{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.everyday-cat-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.everyday-cat-title{font-size:13px;font-weight:800;color:var(--ink)}
+.everyday-cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.everyday-cat-chip{background:var(--card-subtle);border:1px solid var(--line);border-radius:var(--radius-md);padding:8px 10px;display:flex;align-items:center;justify-content:space-between}
+.everyday-cat-label{font-size:12px;font-weight:700;display:flex;align-items:center;gap:5px;color:var(--ink)}
+.everyday-cat-count{font-size:11px;font-weight:800;padding:2px 7px;border-radius:var(--radius-pill);background:var(--card);color:var(--accent);border:1px solid var(--line)}
+
+/* Uploads List */
+.item{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.item:first-child{border-top:0}
+.item .left{flex:1;min-width:0}
+.item .n{font-size:14.5px;font-weight:700;color:var(--ink);word-break:break-word}
+.item .s{font-size:11.5px;color:var(--mute);margin-top:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.item .badge{display:inline-block;padding:2px 8px;border-radius:var(--radius-pill);font-size:10px;font-weight:700}
+.item .a{font-weight:800;font-size:15px;white-space:nowrap;text-align:right;color:var(--ink)}
+.item .a.inflow{color:var(--good)}
+.item .a.neutral{color:var(--mute);font-weight:600}
+.acts{display:flex;gap:12px;margin-top:5px;font-size:11.5px}
+.acts a{color:var(--accent);text-decoration:none;font-weight:700;cursor:pointer}
+.acts a:hover{text-decoration:underline}
+.acts a.del{color:var(--bad)}
+.empty{color:var(--mute);text-align:center;padding:24px 8px;font-size:13.5px;font-weight:500}
+
+/* Toast & Lightbox */
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(85px + env(safe-area-inset-bottom,0px));background:var(--ink);color:#FFFFFF;padding:10px 20px;border-radius:var(--radius-pill);font-size:13.5px;font-weight:700;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center;z-index:99;box-shadow:0 8px 24px rgba(30,34,41,0.2)}
+.toast.on{opacity:1}
+.view{position:fixed;inset:0;background:rgba(30,34,41,.85);display:none;flex-direction:column;z-index:999;padding-top:env(safe-area-inset-top,0px);backdrop-filter:blur(8px)}
+.view.on{display:flex}
+.view .bar2{display:flex;justify-content:flex-end;padding:12px}
+.view .bar2 button{border:0;background:#FFFFFF;color:var(--ink);padding:9px 16px;border-radius:var(--radius-pill);font:inherit;font-weight:700;font-size:13px;cursor:pointer}
+.view .body{flex:1;overflow:auto;display:flex;align-items:center;justify-content:center}
+.view img{max-width:100%;max-height:100%;border-radius:12px}
+.view iframe{width:100%;height:100%;border:0;background:#fff;border-radius:12px}
+
+/* Batch item cards */
+.bhead{font-size:15px;font-weight:700;margin-bottom:4px}
+.bi{border:1px solid var(--line);border-radius:var(--radius-lg);padding:12px;margin-top:10px;background:var(--card-subtle)}
+.bi.done{opacity:.6}
+.bh{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.bn{font-size:13.5px;font-weight:700;word-break:break-all}
+.bh a{color:var(--bad);font-size:12px;font-weight:700;text-decoration:none;cursor:pointer}
+.bs{font-size:12px;color:var(--mute);margin:4px 0 8px}
+
+/* User header status & logout button */
+.user-badge{display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 10px;border-radius:var(--radius-pill);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.user-name{font-weight:700;color:var(--ink);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-logout{border:0;background:transparent;color:var(--bad);font-size:11px;font-weight:700;padding:2px 6px;cursor:pointer}
+.btn-logout:hover{text-decoration:underline}
+
+/* Account Login Gate & Modal */
+.account-gate{position:fixed;inset:0;background:rgba(247,245,240,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.account-card{background:#FFFFFF;border:1px solid var(--line);border-radius:28px;padding:32px 26px;width:100%;max-width:380px;box-shadow:0 12px 36px -4px rgba(30,34,41,.1);text-align:left}
+.account-logo{width:50px;height:50px;border-radius:16px;background:var(--accent-light);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;margin-bottom:16px}
+.account-title{font-size:21px;font-weight:800;letter-spacing:-.025em;margin-bottom:4px;color:var(--ink)}
+.account-sub{font-size:13px;color:var(--mute);margin-bottom:20px;line-height:1.4}
+.account-err{background:var(--bad-light);color:var(--bad);padding:8px 12px;border-radius:10px;font-size:12px;font-weight:700;margin-bottom:12px;border:1px solid rgba(224,72,54,.2)}
+.account-toggle{margin-top:18px;text-align:center;font-size:12.5px;color:var(--mute);display:flex;align-items:center;justify-content:center;gap:6px}
+.account-toggle a{color:var(--accent);font-weight:700;text-decoration:none}
+.account-toggle a:hover{text-decoration:underline}
+
+/* User header status & logout button */
+.user-badge{display:flex;align-items:center;gap:8px;font-size:12px;padding:4px 8px 4px 10px;border-radius:20px;background:var(--card);border:1px solid var(--line)}
+.user-name{font-weight:700;color:var(--ink);max-width:115px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-logout{border:0;background:var(--bad-light);color:var(--bad);font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;cursor:pointer;transition:background .15s}
+.btn-logout:hover{filter:brightness(0.95)}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.45); border-color: #DC2626; }
+  50% { box-shadow: 0 0 0 6px rgba(220, 38, 38, 0.2); border-color: #DC2626; }
+  100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); border-color: var(--line); }
+}
+.highlight-pulse {
+  animation: pulseGlow 1.2s ease-in-out infinite;
+  background: #FFF1F2 !important;
+  border-color: #DC2626 !important;
+  transition: all 0.3s ease;
+}
+
+.hidden{display:none !important}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+<body>
+<main>
+  <header>
+    <div class="brand">
+      <span style="color:var(--accent)">✦</span> Hisaab Kitaab
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div id="userHeaderBadge" class="user-badge hidden">
+        <span id="userAccountName" class="user-name">User</span>
+        <button id="logoutBtn" class="btn-logout" type="button">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= 1. INPUT VIEW ================= -->
+  <section id="viewInput">
+    <h1 id="addtitle">Record expense</h1>
+    <div id="formcard" class="card">
+      <label style="margin-top:0;display:flex;justify-content:space-between;align-items:center">
+        <span>Bill or Receipt</span>
+        <span style="font-size:11.5px;font-weight:600;color:var(--accent)">Auto-extracts items</span>
+      </label>
+      <div class="files">
+        <label class="pick">
+          <span style="font-size:26px">📷</span>
+          <b>Camera</b>
+          <span style="font-size:11px;color:var(--mute)">Capture receipt</span>
+          <input id="cam" type="file" accept="image/*" capture="environment">
+        </label>
+        <label class="pick">
+          <span style="font-size:26px">📁</span>
+          <b>File Upload</b>
+          <span style="font-size:11px;color:var(--mute)">PDF or Image</span>
+          <input id="file" type="file" accept="application/pdf,image/*" multiple>
+        </label>
+      </div>
+
+      <div id="prog" class="prog hidden" aria-live="polite">
+        <div id="pl" class="pl">Reading bill...</div>
+        <div class="pb"><i id="pf"></i></div>
+      </div>
+
+      <div id="chip" class="chip"></div>
+
+      <label for="amount" style="margin-top:16px">Amount (₹)</label>
+      <input id="amount" class="amt" type="text" inputmode="decimal" placeholder="0" autocomplete="off">
+
+      <div class="row">
+        <div>
+          <label for="date">Date</label>
+          <input id="date" type="date" min="2000-01-01">
+        </div>
+        <div>
+          <label for="note">Merchant / Description</label>
+          <input id="note" type="text" maxlength="200" placeholder="e.g. Zepto, Apple, Coffee" autocomplete="off">
+        </div>
+      </div>
+
+      <div id="err" class="ferr" role="alert"></div>
+
+      <button id="save" class="btn primary" style="margin-top:16px">
+        <span>Save Expense</span>
+      </button>
+    </div>
+
+    <!-- Batch upload UI -->
+    <div id="batch" class="hidden">
+      <div class="card">
+        <div id="bhead" class="bhead"></div>
+        <div id="bprog" class="prog hidden" aria-live="polite">
+          <div id="bpl" class="pl"></div>
+          <div class="pb"><i id="bpf"></i></div>
+        </div>
+        <div id="blist"></div>
+        <div id="berr" class="ferr" role="alert"></div>
+        <button id="bsave" class="btn" disabled>Save</button>
+        <label id="badd" class="btn ghost" for="file">Add more files</label>
+        <button id="bclear" class="btn ghost">Cancel</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 2. DASHBOARD VIEW ================= -->
+  <section id="viewDash" class="hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h1 style="margin:0">Dashboard</h1>
+      <input id="dashMonth" type="month" style="width:auto;min-height:36px;padding:6px 12px;font-size:13px">
+    </div>
+
+    <!-- Main KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card kpi-full">
+        <div class="kpi-label">Total Spend</div>
+        <div id="kpiExpense" class="kpi-val" style="color:var(--bad)">₹0</div>
+        <div id="kpiCount" class="kpi-sub">0 transactions</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Inflow</div>
+        <div id="kpiInflow" class="kpi-val" style="color:var(--good);font-size:22px">₹0</div>
+        <div class="kpi-sub">Received</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Transfers</div>
+        <div id="kpiSelf" class="kpi-val" style="color:var(--mute);font-size:22px">₹0</div>
+        <div class="kpi-sub">Internal transfers</div>
+      </div>
+    </div>
+
+    <!-- ================= VISUAL 1: EXPENSE TREND & LEAKAGE TRACKER ================= -->
+    <div class="trend-card">
+      <div class="trend-header">
+        <div>
+          <div class="trend-title" id="trendTitle">Spending Velocity</div>
+        </div>
+        <div class="trend-controls">
+          <button class="trend-tab active" data-mode="dod">Daily</button>
+          <button class="trend-tab" data-mode="wow">Weekly</button>
+          <button class="trend-tab" data-mode="mom">Monthly</button>
+        </div>
+      </div>
+
+      <!-- The Interactive Trend Graph (SVG) -->
+      <div class="trend-svg-wrap" id="trendGraphWrap">
+        <div id="chartTooltip" class="chart-tooltip"></div>
+        <svg id="trendSvg" viewBox="0 0 520 210" preserveAspectRatio="none"></svg>
+      </div>
+
+      <!-- Trend & Comparison Insight Box -->
+      <div id="trendComparisonBox" style="margin-top:12px;padding:12px 14px;border-radius:14px;font-size:12.5px;line-height:1.45;background:var(--card-subtle);border:1px solid var(--line);color:var(--ink)"></div>
+    </div>
+
+
+    <!-- Uploads List -->
+    <div class="card">
+      <div style="font-weight:700;font-size:16px;margin-bottom:12px">Uploads</div>
+      <div id="list"></div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;gap:10px">
+      <button id="csv" class="btn ghost" style="margin-top:0">Copy CSV</button>
+      <button id="exportJson" class="btn ghost" style="margin-top:0">Backup JSON</button>
+    </div>
+  </section>
+</main>
+
+<!-- Bottom Nav: Exactly 2 options: Record and Insights -->
+<nav id="nav" class="nav">
+  <button id="tInput" class="on">
+    <span style="font-size:17px">✦</span> Record
+  </button>
+  <button id="tDash">
+    <span style="font-size:17px">◒</span> Insights
+  </button>
+</nav>
+
+<!-- Account Login & Registration Gate -->
+<div id="accountGate" class="account-gate hidden">
+  <div class="account-card">
+    <div class="account-logo">✦</div>
+    <div class="account-title" id="authTitle">Sign in to your Account</div>
+    <div class="account-sub" id="authSub">Manage your personal expenses, bills, and insights securely.</div>
+    
+    <div id="authError" class="account-err hidden"></div>
+
+    <form id="authForm" onsubmit="return false;">
+      <label for="authEmail" style="margin-top:0">Email or Username</label>
+      <input id="authEmail" type="text" placeholder="e.g. bishwajeet0206pal@gmail.com" autocomplete="username" required>
+
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:12px">
+        <label for="authPassword" style="margin:0">Password</label>
+        <a href="#" id="forgotPassLink" style="font-size:11.5px;color:var(--accent);text-decoration:none">Forgot?</a>
+      </div>
+      <input id="authPassword" type="password" placeholder="Enter password" autocomplete="current-password" required>
+
+      <div id="confirmPasswordWrap" class="hidden" style="margin-top:12px">
+        <label for="authConfirmPassword">Confirm Password</label>
+        <input id="authConfirmPassword" type="password" placeholder="Re-enter password" autocomplete="new-password">
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin:14px 0 16px;font-size:12px">
+        <label style="display:flex;align-items:center;gap:6px;margin:0;cursor:pointer;font-weight:500;color:var(--ink)">
+          <input id="authKeep" type="checkbox" checked style="width:16px;height:16px;margin:0"> Keep me signed in
+        </label>
+      </div>
+
+      <button id="authSubmitBtn" class="btn primary" style="width:100%;margin-top:0" type="submit">Sign In</button>
+    </form>
+
+    <div class="account-toggle">
+      <span id="authToggleText">Don't have an account?</span>
+      <a href="#" id="authToggleBtn">Create Account</a>
+    </div>
+
+    <!-- Quick 1-Click Access for Convenience -->
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line);text-align:center">
+      <button id="quickLoginBtn" class="btn ghost" type="button" style="width:100%;font-size:12px;padding:8px">
+        ⚡ Quick Login (Bishwajeet)
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+<div id="view" class="view">
+  <div class="bar2"><button id="close">Close</button></div>
+  <div class="body" id="vbody"></div>
+</div>
+
+<script>
+(function(){
+  // --- Configuration & Constants ---
+  var SB_URL="https://owcarcnmtmkrewrffciw.supabase.co";
+  var SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93Y2FyY25tdG1rcmV3cmZmY2l3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2Nzc3NzYsImV4cCI6MjEwNzI1Mzc3Nn0.rUcuwUrypLZyAdBiYWBsMII23NKBhltM5YqMTZj9VA0";
+  var STORAGE_KEY="ledger_expenses_v2";
+
+  // --- Fixed List of 6 Major Categories ---
+  var CATEGORIES = [
+    { id: "Groceries", name: "Groceries", shortName: "Groceries", icon: "🛒", color: "#10B981", grad: "linear-gradient(180deg, #34D399 0%, #059669 100%)" },
+    { id: "Food & Dining", name: "Food & Dining", shortName: "Dining", icon: "🍽️", color: "#F97316", grad: "linear-gradient(180deg, #FB923C 0%, #EA580C 100%)" },
+    { id: "Shopping", name: "Shopping", shortName: "Shopping", icon: "🛍️", color: "#EC4899", grad: "linear-gradient(180deg, #F472B6 0%, #DB2777 100%)" },
+    { id: "Bills & Utilities", name: "Bills & Utilities", shortName: "Bills", icon: "⚡", color: "#3B82F6", grad: "linear-gradient(180deg, #60A5FA 0%, #2563EB 100%)" },
+    { id: "Travel & Transport", name: "Travel & Transport", shortName: "Travel", icon: "🚗", color: "#06B6D4", grad: "linear-gradient(180deg, #22D3EE 0%, #0891B2 100%)" },
+    { id: "Healthcare & Medical", name: "Healthcare & Medical", shortName: "Healthcare", icon: "💊", color: "#EF4444", grad: "linear-gradient(180deg, #F87171 0%, #DC2626 100%)" }
+  ];
+
+  // Filters to exclude receipt metadata, taxes, discounts, totals, and column headers
+  var NON_ITEM_EXACT = /^(?:disc\.?|dis\.?|discount|amt\.?|amount|s\/?ut|gst|cgst|sgst|igst|utgst|cess|vat|tax(?:able)?|total|sub[\s-]*total|grand[\s-]*total|net(?:[\s-]*amt)?|gross|round[\s-]*off|qty\.?|quantity|rate|mrp|price|unit|uom|hsn|sac|sr\.?[\s-]*no\.?|s\.?no\.?|sl\.?no\.?|no\.?|item(?:[\s-]*name)?|particulars|description|cash|card|change|balance|paid|tendered|charges?|fee|delivery|handling|packaging|convenience|fssai|gstin|pan|cin|date|time|table|counter|token|bill(?:\s*no)?|invoice(?:\s*no)?|order(?:\s*no)?|receipt(?:\s*no)?|thank\s*you|visit\s*again|customer(?:\s*copy)?|merchant(?:\s*copy)?|pos|terminal|store|shop|branch|phone|tel|mobile|kg|gm|g|ml|l|ltr|pcs|pc|pack|nos|box|bun|bunch|pkt|pkts|nature\s*of\s*charge|surge\s*charge|handling\s*charge|delivery\s*(?:and\s*other\s*)?charges?|annexure|state|pin\s*code|address)$/i;
+
+  var NON_ITEM_CONTAINS = /\b(?:gstin|fssai|cgst|sgst|igst|utgst|tax\s*invoice|retail\s*invoice|cash\s*memo|sub[\s-]*total|grand[\s-]*total|total\s*payable|amount\s*payable|round\s*off|place\s*of\s*supply|thank\s*you|visit\s*again|bill\s*to|ship\s*to|delivery\s*partner|convenience\s*fee|packing\s*charges?|delivery\s*(?:and\s*other\s*)?charges?|surge\s*charge|handling\s*charge|nature\s*of\s*charge|annexure|authorised\s*signatory|terms\s*&\s*conditions|cashier|manager|amount\s*in\s*words|rupees?\s+[a-z\s]+only|private\s*limited|pvt\s*ltd|formerly\s*known|reverse\s*charge|\bcin\b|\bpan\b|pin\s*code|state\s*:)\b/i;
+
+  var CONTINUATION_WORDS = /^(?:leaves|fresh|powder|seeds|oil|flour|pouch|pack|bottle|packet|bunch|box|can|jar|tube|cream|juice|soap|wash|brush|atta|dal|masala|paste|100g|200g|250g|500g|1kg|2kg|5kg|1l|500ml|red|green|white|black|brown|yellow)$/i;
+
+  // Indian currency words to number converter (e.g. "Rupees Two Hundred Fifty Eight Only" -> 258)
+  function parseAmountInWords(text){
+    if(!text) return null;
+    var m = text.match(/(?:amount\s*in\s*words|in\s*words)[\s:=]*rupees?\s*([a-z\s-]+?)(?:\s*only|\.|\n|$)/i) ||
+            text.match(/rupees?\s*([a-z\s-]+?)\s*only/i);
+    if(!m || !m[1]) return null;
+    var rawWords = m[1].toLowerCase().replace(/[^a-z\s]/g, " ").trim().split(/\s+/);
+
+    var units = {
+      zero:0, one:1, two:2, three:3, four:4, five:5, six:6, seven:7, eight:8, nine:9,
+      ten:10, eleven:11, twelve:12, thirteen:13, fourteen:14, fifteen:15, sixteen:16,
+      seventeen:17, eighteen:18, nineteen:19,
+      twenty:20, thirty:30, forty:40, fifty:50, sixty:60, seventy:70, eighty:80, ninety:90
+    };
+
+    var total = 0, current = 0;
+    var hasWord = false;
+    for(var i=0; i<rawWords.length; i++){
+      var w = rawWords[i];
+      if(w === "and" || w === "point" || w === "paise") continue;
+      if(units[w] !== undefined){
+        current += units[w];
+        hasWord = true;
+      } else if(w === "hundred"){
+        current = (current || 1) * 100;
+        hasWord = true;
+      } else if(w === "thousand"){
+        total += (current || 1) * 1000;
+        current = 0;
+        hasWord = true;
+      } else if(w === "lakh" || w === "lakhs" || w === "lac" || w === "lacs"){
+        total += (current || 1) * 100000;
+        current = 0;
+        hasWord = true;
+      } else if(w === "crore" || w === "crores"){
+        total += (current || 1) * 10000000;
+        current = 0;
+        hasWord = true;
+      }
+    }
+    total += current;
+    return hasWord && total > 0 ? total : null;
+  }
+
+  function isValidItemName(str){
+    if(!str || typeof str !== "string") return false;
+    var s = str.trim();
+    if(s.length < 3 || s.length > 70) return false;
+    if(/^\d+$/.test(s) || /^[₹$\d\s.,:/-]+$/.test(s)) return false;
+    if(NON_ITEM_EXACT.test(s) || NON_ITEM_CONTAINS.test(s)) return false;
+    if(!/[a-zA-Z]/.test(s)) return false;
+    return true;
+  }
+
+  // Classification rules strictly mapping into the 6 fixed categories
+  var ITEM_CATEGORY_RULES = [
+    { category: "Groceries", re: /milk|bread|egg|paneer|atta|rice|dal|oil|tomato|onion|potato|coriander|mint|leaves|palak|spinach|vegetable|fruit|apple|banana|mango|orange|curd|dahi|butter|cheese|ghee|biscuit|cookie|snack|namkeen|chips|tea|coffee|sugar|spice|masala|grocery|flour|pulses|wheat|oats|chana|maggi|noodle|pasta|sauce|ketchup|salt|besan|sooji|rava|ginger|garlic|chilly|chilli|lemon|cereal|soya|almond|cashew|raisin|soap|detergent|surf|vim|harpic|cleaner|mop|broom|tissue|colgate|paste|rin|tide|dettol|shampoo|conditioner/i },
+    { category: "Food & Dining", re: /biryani|pizza|burger|sandwich|wrap|roll|thali|curry|chicken|mutton|fish|naan|roti|dosa|idli|samosa|momos|fries|dessert|swiggy|zomato|restaurant|cafe|dining|meal|beverage|shake|ice\s*cream|pastry|cake|kebab|tikka|boba|eatery|takeout|canteen/i },
+    { category: "Shopping", re: /pen|pencil|notebook|paper|book|diary|stationery|marker|highlighter|eraser|sharpener|stapler|tape|fevicol|glue|folder|file|register|scissors|shirt|pant|jeans|tshirt|dress|shoes|sandal|bag|watch|clothing|apparel|footwear|electronics|cable|charger|headphones|earphones|amazon|flipkart|myntra|zara|h&m/i },
+    { category: "Bills & Utilities", re: /electricity|power|water|gas|lpg|cylinder|wifi|broadband|recharge|dth|airtel|jio|bsnl|vi\s*bill|netflix|spotify|prime|hotstar|youtube|saas|software|gym|membership|subscription|utility/i },
+    { category: "Travel & Transport", re: /uber|ola|cab|auto|petrol|diesel|fuel|cng|metro|train|irctc|flight|bus|toll|fastag|parking|ticket|fare|transport/i },
+    { category: "Healthcare & Medical", re: /medicine|tablet|paracetamol|bandage|pharma|pharmacy|syrup|capsule|ointment|sanitizer|vicks|crocin|combiflam|strepsils|inhaler|gauze|cotton|thermometer|apollo|medplus|netmeds|clinic|doctor|hospital|diagnostic|lab\s*test|blood\s*test/i }
+  ];
+
+  function classifyItem(itemName){
+    if(!itemName) return "Groceries";
+    for(var i=0; i<ITEM_CATEGORY_RULES.length; i++){
+      if(ITEM_CATEGORY_RULES[i].re.test(itemName)) return ITEM_CATEGORY_RULES[i].category;
+    }
+    return "Groceries";
+  }
+
+  var selectedCategory = "Groceries";
+  var selectedTransferType = "sent"; // "sent", "received", "self"
+
+  var $ = function(i){return document.getElementById(i)};
+  var picked=null, reading=false, readToken=0, renderToken=0, curUrl=null;
+  var amountTouched=false, noteTouched=false;
+
+  function pad(n){return String(n).padStart(2,"0")}
+  function today(){var d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+  function money(n){return "\u20B9"+Number(n||0).toLocaleString("en-IN",{maximumFractionDigits:2,minimumFractionDigits:n%1===0?0:2})}
+  function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+  function toast(m){var t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove("on")},2600)}
+
+  function parseAmount(raw){
+    var s=String(raw==null?"":raw).replace(/[\u20B9\s]/g,"").replace(/^rs\.?/i,"").replace(/,/g,"");
+    if(!s)return {error:"Enter an amount"};
+    if(!/^(\d+(\.\d{1,2})?|\.\d{1,2})$/.test(s))return {error:"Use numbers only, like 258 or 258.50"};
+    var v=Number(s);
+    if(!(v>0))return {error:"Amount must be more than 0"};
+    if(v>100000000)return {error:"Amount is too large"};
+    return {value:Math.round(v*100)/100};
+  }
+
+  function normDate(s){
+    s=String(s==null?"":s).trim();
+    var y,m,d,t;
+    if((t=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/))){y=+t[1];m=+t[2];d=+t[3]}
+    else if((t=s.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})$/))){d=+t[1];m=+t[2];y=+t[3]}
+    else return null;
+    var dt=new Date(Date.UTC(y,m-1,d));
+    if(dt.getUTCFullYear()!==y||dt.getUTCMonth()!==m-1||dt.getUTCDate()!==d)return null;
+    return y+"-"+pad(m)+"-"+pad(d);
+  }
+
+  function cleanText(s,max){
+    return String(s==null?"":s).replace(/[\u0000-\u001f\u007f]/g," ").replace(/\s+/g," ").trim().slice(0,max||200);
+  }
+
+  // --- Cryptographic File Fingerprinting & Duplicate Detection ---
+  async function computeFileHash(fileOrBlob){
+    if(!fileOrBlob) return null;
+    try{
+      if(window.crypto && window.crypto.subtle && window.crypto.subtle.digest){
+        var buf = await fileOrBlob.arrayBuffer();
+        var digest = await window.crypto.subtle.digest("SHA-256", buf);
+        var arr = Array.prototype.slice.call(new Uint8Array(digest));
+        return arr.map(function(b){ return b.toString(16).padStart(2, "0"); }).join("");
+      }
+    }catch(e){}
+    try{
+      var sample = "";
+      if(fileOrBlob.slice){
+        var sliceBlob = fileOrBlob.slice(0, Math.min(4096, fileOrBlob.size));
+        var text = await sliceBlob.text();
+        sample = text.slice(0, 500);
+      }
+      var meta = (fileOrBlob.name||"") + "_" + fileOrBlob.size + "_" + (fileOrBlob.type||"") + "_" + sample;
+      var h = 0;
+      for(var i=0; i<meta.length; i++){
+        h = ((h << 5) - h) + meta.charCodeAt(i);
+        h |= 0;
+      }
+      return "fb_" + Math.abs(h);
+    }catch(err){
+      return "fb_" + (fileOrBlob.name||"") + "_" + (fileOrBlob.size||"");
+    }
+  }
+
+  function findDuplicateRecord(recs, check){
+    if(!Array.isArray(recs) || !check) return null;
+
+    // Duplicate detection is strictly based on document identity (same document)
+    var checkHash = check.fileHash || check.hash || (check.inv && check.inv.hash) || null;
+    var checkName = check.file ? check.file.name : (check.inv ? check.inv.name : null);
+    var checkSize = check.file ? check.file.size : (check.inv ? check.inv.size : null);
+
+    // If check has no document attached, it cannot be a document duplicate
+    if(!checkHash && !checkName) return null;
+
+    for(var i=0; i<recs.length; i++){
+      var r = recs[i];
+      if(check.id && r.id === check.id) continue;
+
+      var rHash = r.fileHash || r.hash || (r.inv && r.inv.hash) || null;
+      var rName = (r.inv && r.inv.name) || null;
+      var rSize = (r.inv && r.inv.size) || null;
+
+      // 1. Exact file hash match (same document content)
+      if(checkHash && rHash && checkHash === rHash){
+        return { reason: "file", record: r };
+      }
+
+      // 2. Exact file name and file size match
+      if(checkName && checkSize != null && rName && rSize != null){
+        if(checkName === rName && Number(checkSize) === Number(rSize)){
+          return { reason: "file", record: r };
+        }
+      }
+    }
+    return null;
+  }
+
+  function deduplicateLocalRecords(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return;
+      var list = JSON.parse(raw);
+      if(!Array.isArray(list)) return;
+      var seenDocs = {};
+      var clean = [];
+      for(var i=0; i<list.length; i++){
+        var r = list[i];
+        var hashKey = r.fileHash || r.hash || (r.inv && r.inv.hash) || null;
+        var docKey = hashKey || (r.inv && r.inv.name && r.inv.size ? (r.inv.name + "_" + r.inv.size) : null);
+        if(docKey){
+          if(seenDocs[docKey]){
+            continue; // drop duplicate document
+          }
+          seenDocs[docKey] = true;
+        }
+        clean.push(r);
+      }
+      if(clean.length !== list.length){
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(clean));
+      }
+    }catch(e){}
+  }
+
+  // --- Local Data Store (Primary & Offline-ready) ---
+  function getLocalRecords(){
+    try{
+      var raw=localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){return []}
+  }
+
+  function setLocalRecords(recs){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(recs));
+    }catch(e){}
+  }
+
+  // Optional Supabase sync without blocking
+  async function syncSaveToSupabase(rec, b64){
+    try{
+      await fetch(SB_URL+"/rest/v1/rpc/exp_add",{
+        method:"POST",
+        headers:{"Content-Type":"application/json",apikey:SB_KEY,Authorization:"Bearer "+SB_KEY},
+        body:JSON.stringify({
+          p_id:rec.id,
+          p_amount:rec.amount,
+          p_date:rec.date,
+          p_note:rec.note,
+          p_inv_name:rec.inv?rec.inv.name:null,
+          p_inv_type:rec.inv?rec.inv.type:null,
+          p_hash:rec.hash||null
+        })
+      });
+    }catch(e){}
+  }
+
+  async function syncDeleteFromSupabase(id){
+    try{
+      await fetch(SB_URL+"/rest/v1/rpc/exp_delete",{
+        method:"POST",
+        headers:{"Content-Type":"application/json",apikey:SB_KEY,Authorization:"Bearer "+SB_KEY},
+        body:JSON.stringify({p_id:id})
+      });
+    }catch(e){}
+  }
+
+  async function getAllTransactions(){
+    return getLocalRecords();
+  }
+
+  async function saveTransaction(rec, b64){
+    var list = getLocalRecords();
+    var dup = findDuplicateRecord(list, rec);
+    if(dup){
+      var dDate = (dup.record && dup.record.date) || "previous date";
+      var dAmt = money((dup.record && dup.record.amount) || 0);
+      throw new Error("Duplicate document rejected: This bill document has already been recorded on " + dDate + " (" + dAmt + "). No duplicate records allowed.");
+    }
+    // remove existing if update
+    list = list.filter(function(r){return r.id!==rec.id});
+    list.unshift(rec);
+    setLocalRecords(list);
+    // background sync attempt
+    syncSaveToSupabase(rec, b64).catch(function(){});
+  }
+
+  async function deleteTransaction(id){
+    var list = getLocalRecords();
+    list = list.filter(function(r){return r.id!==id});
+    setLocalRecords(list);
+    syncDeleteFromSupabase(id).catch(function(){});
+  }
+
+  // --- Category Selector UI ---
+  function renderCategoryGrid(){
+    var grid=$("catGrid");
+    if(!grid) return;
+    grid.innerHTML=CATEGORIES.map(function(c){
+      var active=c.id===selectedCategory?" active":"";
+      return '<div class="cat-chip'+active+'" data-id="'+c.id+'"><span>'+c.icon+'</span>'+c.name+'</div>';
+    }).join("");
+
+    Array.prototype.forEach.call(grid.querySelectorAll(".cat-chip"), function(chip){
+      chip.onclick=function(){
+        selectCategory(chip.getAttribute("data-id"));
+      };
+    });
+  }
+
+  function selectCategory(catId){
+    selectedCategory=catId;
+    renderCategoryGrid();
+    var transferWrap=$("transferSubtypeWrap");
+    if(transferWrap){
+      if(catId==="Money Transfer"){
+        transferWrap.classList.remove("hidden");
+        updateTransferTypeUI();
+      }else{
+        transferWrap.classList.add("hidden");
+      }
+    }
+  }
+
+  function updateTransferTypeUI(){
+    var wrap = $("transferSubtypeWrap");
+    if(!wrap) return;
+    var pills=wrap.querySelectorAll(".sub-pill");
+    Array.prototype.forEach.call(pills, function(p){
+      p.classList.toggle("active", p.getAttribute("data-sub")===selectedTransferType);
+    });
+    var noteEl=$("transferNote");
+    if(noteEl){
+      if(selectedTransferType==="self"){
+        noteEl.textContent="🔄 Self transfer between own accounts. Excluded from total expenses.";
+      }else if(selectedTransferType==="received"){
+        noteEl.textContent="📥 Inflow / income received. Excluded from expenses.";
+      }else{
+        noteEl.textContent="📤 Money sent to others is counted as an expense.";
+      }
+    }
+  }
+
+  var tWrap = $("transferSubtypeWrap");
+  if(tWrap){
+    Array.prototype.forEach.call(tWrap.querySelectorAll(".sub-pill"), function(p){
+      p.onclick=function(){
+        selectedTransferType=p.getAttribute("data-sub");
+        updateTransferTypeUI();
+      };
+    });
+  }
+
+  // --- Line items extracted UI (Auto-Categorized for Dashboard Insights) ---
+  // --- Smart Client-Side Invoice / Bill Parser ---
+  function parseInvoiceText(rawText){
+    if(!rawText) return null;
+
+    // 1. DETERMINE THE RIGHT TABLE:
+    // Invoices can have secondary tables (e.g. "Annexure", "Tax Breakdown", "Nature of charge", "HSN/SAC Summary").
+    // We strictly isolate the PRIMARY table where actual items are purchased and completely ignore secondary annexures.
+    var fullText = rawText;
+    var primaryText = rawText;
+    var annexIdx = rawText.search(/\b(?:annexure|nature\s*of\s*charge|hsn(?:\s*\/\s*sac)?\s*summary)\b/i);
+    if(annexIdx !== -1 && annexIdx > 50){
+      primaryText = rawText.slice(0, annexIdx);
+    }
+
+    var lines = primaryText.split(/\r?\n/).map(function(l){return l.trim()}).filter(Boolean);
+    var text = lines.join("\n");
+
+    var merchantPatterns = [
+      { name: "Zepto", re: /zepto|geddit\s+convenience/i, cat: "Groceries" },
+      { name: "Blinkit", re: /blinkit|blink\s+commerce|grofers/i, cat: "Groceries" },
+      { name: "Swiggy Instamart", re: /instamart/i, cat: "Groceries" },
+      { name: "Swiggy", re: /swiggy|bundl\s+technologies/i, cat: "Food & Dining" },
+      { name: "Zomato", re: /zomato|eternal\s+limited/i, cat: "Food & Dining" },
+      { name: "BigBasket", re: /bigbasket|innovative\s+retail/i, cat: "Groceries" },
+      { name: "D-Mart", re: /dmart|d-mart|avenue\s+supermarts/i, cat: "Groceries" },
+      { name: "Apollo Pharmacy", re: /apollo|medplus|netmeds|pharmacy/i, cat: "Healthcare & Medical" },
+      { name: "Amazon", re: /amazon|cloudtail|appario/i, cat: "Shopping" },
+      { name: "Flipkart", re: /flipkart/i, cat: "Shopping" },
+      { name: "Uber", re: /uber/i, cat: "Travel & Transport" },
+      { name: "Ola", re: /ola\s+cabs|ani\s+technologies/i, cat: "Travel & Transport" },
+      { name: "Netflix", re: /netflix/i, cat: "Bills & Utilities" },
+      { name: "Spotify", re: /spotify/i, cat: "Bills & Utilities" },
+      { name: "Amazon Prime", re: /prime\s+video|amazon\s+prime/i, cat: "Bills & Utilities" },
+      { name: "YouTube Premium", re: /youtube\s+premium|google\s+youtube/i, cat: "Bills & Utilities" },
+      { name: "Airtel", re: /airtel|bharti\s+airtel/i, cat: "Bills & Utilities" },
+      { name: "Jio", re: /jio|reliance\s+jio/i, cat: "Bills & Utilities" },
+      { name: "Tata Power", re: /tata\s+power|bses|bescom|uppcl|tneb|adhani\s+electricity/i, cat: "Bills & Utilities" },
+      { name: "Credit Card Payment", re: /credit\s+card|card\s+payment|statement|sbi\s+card|hdfc\s+card|icici\s+card/i, cat: "Bills & Utilities" }
+    ];
+
+    var merchant = null;
+    var detectedCat = null;
+
+    for (var i=0; i<merchantPatterns.length; i++){
+      if(merchantPatterns[i].re.test(text)){
+        merchant = merchantPatterns[i].name;
+        detectedCat = merchantPatterns[i].cat;
+        break;
+      }
+    }
+
+    if(!merchant && lines.length > 0){
+      for(var k=0; k<Math.min(5, lines.length); k++){
+        var l=lines[k];
+        if(l.length > 2 && l.length < 35 && !/(tax|invoice|bill|receipt|date|gstin|phone|fssai|order|cash|pos|total)/i.test(l)){
+          merchant = l;
+          break;
+        }
+      }
+    }
+
+    // Locate boundary of the primary items table
+    var tableStartIdx = -1;
+    for(var ts=0; ts<lines.length; ts++){
+      if(/item\s*description|particulars|\bdescription\b|\bitems?\b|\bproduct\b/i.test(lines[ts]) && /(?:mrp|qty|rate|price|amount|taxable|disc|sl|sr)/i.test(lines[ts])){
+        tableStartIdx = ts;
+        break;
+      }
+    }
+
+    var tableEndIdx = lines.length;
+    for(var te=(tableStartIdx !== -1 ? tableStartIdx + 1 : 0); te<lines.length; te++){
+      if(/^total\b/i.test(lines[te]) || /\bamount\s*in\s*words\b/i.test(lines[te]) || /\b(?:grand\s*total|invoice\s*value|amount\s*payable|net\s*payable)\b/i.test(lines[te])){
+        tableEndIdx = te;
+        break;
+      }
+    }
+
+    // 2. EXTRACT TOTAL AMOUNT FROM PRIMARY TABLE:
+    var wordsAmount = parseAmountInWords(fullText);
+    var tableTotal = null;
+
+    // Check Total row at table boundary
+    if(tableEndIdx < lines.length && /\btotal\b/i.test(lines[tableEndIdx])){
+      var rowNums = lines[tableEndIdx].match(/\b\d+(?:,\d+)*(?:\.\d{1,2})?\b/g);
+      if(rowNums && rowNums.length > 0){
+        // In a table Total row (e.g. Total | Qty: 1 | Taxable: 245.71 | CGST | SGST | Total: 258.00)
+        // The payable invoice total is the LAST number, NEVER the first number (which is Qty=1)!
+        var candidate = parseFloat(rowNums[rowNums.length - 1].replace(/,/g, ""));
+        if(candidate > 0 && candidate < 100000000) tableTotal = candidate;
+      }
+    }
+
+    // Fallback scan on primary table lines
+    if(!tableTotal){
+      for(var j=lines.length-1; j>=0; j--){
+        var line=lines[j];
+        if(/\b(?:grand\s*total|invoice\s*value|amount\s*payable|net\s*payable|total\s*payable|bill\s*amount)\b/i.test(line) || /^total\b/i.test(line)){
+          var nums=line.match(/\b\d+(?:,\d+)*(?:\.\d{1,2})?\b/g);
+          if(nums && nums.length > 0){
+            var pVal=parseFloat(nums[nums.length - 1].replace(/,/g, ""));
+            if(pVal>0 && pVal<100000000){ tableTotal=pVal; break; }
+          }
+        }
+      }
+    }
+
+    var regexAmount = null;
+    var totalRegexes = [
+      /(?:grand\s*total|invoice\s*value|amount\s*payable|net\s*payable|total\s*payable|bill\s*amount|final\s*amount|total\s*amount|paid\s*amount|net\s*amount)[\s:=₹rs.]*([0-9,]+(?:\.[0-9]{1,2})?)/i,
+      /(?:total|paid)[\s:=₹rs.]*([0-9,]+(?:\.[0-9]{1,2})?)/i,
+      /₹\s*([0-9,]+(?:\.[0-9]{1,2})?)/i,
+      /rs\.?\s*([0-9,]+(?:\.[0-9]{1,2})?)/i
+    ];
+
+    for (var t=0; t<totalRegexes.length; t++){
+      var m = primaryText.match(totalRegexes[t]);
+      if(m && m[1]){
+        var parsed = parseFloat(m[1].replace(/,/g, ""));
+        if(parsed > 0 && parsed < 100000000){
+          regexAmount = parsed;
+          break;
+        }
+      }
+    }
+
+    // Choose final amount: prioritize verified words / primary table column total over ambiguous quantity=1
+    var amount = wordsAmount || tableTotal || regexAmount;
+    if(amount === 1 && tableTotal && tableTotal > 1) amount = tableTotal;
+    if(amount === 1 && wordsAmount && wordsAmount > 1) amount = wordsAmount;
+
+    // Extract Date
+    var date = null;
+    var datePatterns = [
+      /\b(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})\b/,
+      /\b(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})\b/,
+      /\b(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*[\s,]+(\d{4})\b/i
+    ];
+
+    for(var dp=0; dp<datePatterns.length; dp++){
+      var dm=text.match(datePatterns[dp]);
+      if(dm){
+        if(dm[3] && isNaN(dm[2])){
+          var months=["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+          var mIdx=months.findIndex(function(x){return dm[2].toLowerCase().startsWith(x)}) + 1;
+          date = dm[3]+"-"+pad(mIdx)+"-"+pad(dm[1]);
+          break;
+        } else if(dm[1].length===4){
+          date = dm[1]+"-"+pad(dm[2])+"-"+pad(dm[3]);
+          break;
+        } else {
+          date = dm[3]+"-"+pad(dm[2])+"-"+pad(dm[1]);
+          break;
+        }
+      }
+    }
+
+    // 3. EXTRACT ONLY GENUINE PURCHASED ITEMS FROM PRIMARY TABLE
+    function cleanItemCandidate(str){
+      if(!str) return "";
+      return str
+        .replace(/^[0-9]+(?:\s+[0-9]{8,14})?[.)\s-]+/, "") // remove row index & UPC barcode
+        .replace(/\(hsn[-\s0-9]+\)/i, "") // remove HSN code
+        .replace(/(?:[\s\t]+(?:₹|rs\.?)?[\d,.]+(?:\.\d{1,3})?){2,}$/i, "") // remove trailing table columns (rates, tax, total)
+        .replace(/[\s\t]+(?:₹|rs\.?)?[\d,.]+(?:\.\d{1,2})?$/i, "")
+        .replace(/[\s\t]+\d+(?:\.\d+)?\s*(?:pc|pcs|kg|gm|g|ml|l|ltr|pack|pkts?|bun|bunch|nos|x)\b.*$/i, "")
+        .replace(/[-–—:]\s*$/, "")
+        .trim();
+    }
+
+    // Only search lines inside the primary items table
+    var itemSearchLines = (tableStartIdx !== -1 && tableEndIdx > tableStartIdx)
+      ? lines.slice(tableStartIdx + 1, tableEndIdx)
+      : lines;
+
+    var items = [];
+    for(var ln=0; ln<itemSearchLines.length; ln++){
+      var rawL = itemSearchLines[ln].trim();
+      if(!rawL || NON_ITEM_CONTAINS.test(rawL)) continue;
+
+      var cleanL = cleanItemCandidate(rawL);
+      if(!cleanL || cleanL.length < 3 || /^\d+$/.test(cleanL) || /^[₹$\d\s.,:/-]+$/.test(cleanL)) continue;
+      if(NON_ITEM_EXACT.test(cleanL) || NON_ITEM_CONTAINS.test(cleanL)) continue;
+
+      // Check multi-line descriptor continuation (e.g. "Coriander" line 1, "Leaves" line 2)
+      if(ln + 1 < itemSearchLines.length){
+        var nextRaw = itemSearchLines[ln + 1].trim();
+        var nextClean = cleanItemCandidate(nextRaw);
+        if(nextClean && (CONTINUATION_WORDS.test(nextClean) || /^[a-z]/.test(nextRaw))){
+          if(!NON_ITEM_EXACT.test(nextClean) && !NON_ITEM_CONTAINS.test(nextClean)){
+            cleanL = cleanL + " " + nextClean;
+            ln++; // advance past continuation line
+          }
+        }
+      }
+
+      if(isValidItemName(cleanL) && items.indexOf(cleanL) === -1){
+        items.push(cleanL);
+      }
+      if(items.length >= 12) break;
+    }
+
+    // Category inference fallback (Strictly one of the 6 fixed major categories)
+    if(!detectedCat){
+      var combo = (items.join(" ") + " " + text).toLowerCase();
+      if(/restaurant|biryani|pizza|burger|chai|coffee|curry|thali|dosa|swiggy|zomato|dining|food|snack|kitchen|cafe|eatery/i.test(combo)){
+        detectedCat = "Food & Dining";
+      }else if(/grocery|vegetable|fruit|milk|bread|paneer|atta|oil|masala|dal|rice|curd|onion|potato|zepto|blinkit|supermarket|coriander|mint|leaves/i.test(combo)){
+        detectedCat = "Groceries";
+      }else if(/medicine|pharmacy|doctor|hospital|clinic|apollo|medplus|netmeds|health|tablet|syrup/i.test(combo)){
+        detectedCat = "Healthcare & Medical";
+      }else if(/electricity|water|broadband|wifi|cylinder|gas bill|utility|recharge|dth|netflix|spotify|prime/i.test(combo)){
+        detectedCat = "Bills & Utilities";
+      }else if(/uber|ola|cab|auto|petrol|diesel|fuel|flight|irctc|metro|toll/i.test(combo)){
+        detectedCat = "Travel & Transport";
+      }else{
+        detectedCat = "Shopping";
+      }
+    }
+
+    return {
+      amount: amount,
+      merchant: merchant,
+      date: date,
+      category: detectedCat,
+      items: []
+    };
+  }
+
+  // --- PDF Text Extraction ---
+  async function extractTextFromPdf(file){
+    var lib=window.pdfjsLib;
+    if(!lib) return "";
+    var doc=await lib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
+    var allText=[];
+    var pagesToCheck = doc.numPages > 1 ? [1, doc.numPages] : [1];
+    for(var i=0; i<pagesToCheck.length; i++){
+      var p=await doc.getPage(pagesToCheck[i]);
+      var tc=await p.getTextContent();
+      var str=tc.items.map(function(item){return item.str}).join("\n");
+      allText.push(str);
+    }
+    return allText.join("\n");
+  }
+
+  // --- Tesseract.js Image OCR Extraction ---
+  async function extractTextWithTesseract(blob, onProgress){
+    if(typeof Tesseract === "undefined") return "";
+    var worker = await Tesseract.createWorker("eng");
+    var ret = await worker.recognize(blob);
+    await worker.terminate();
+    return ret.data.text || "";
+  }
+
+  function shrink(file){
+    return new Promise(function(res){
+      if(!/^image\//.test(file.type))return res(file);
+      var img=new Image(),u=URL.createObjectURL(file);
+      img.onload=function(){
+        var m=1600,s=Math.min(1,m/Math.max(img.width,img.height));
+        var c=document.createElement("canvas");c.width=Math.max(1,Math.round(img.width*s));c.height=Math.max(1,Math.round(img.height*s));
+        c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+        c.toBlob(function(b){URL.revokeObjectURL(u);res(b||file)},"image/jpeg",0.85);
+      };
+      img.onerror=function(){URL.revokeObjectURL(u);res(file)};
+      img.src=u;
+    });
+  }
+
+  function toB64(blob){
+    return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(String(r.result).split(",")[1]||"")};r.onerror=function(){rej(new Error("Could not read file"))};r.readAsDataURL(blob)});
+  }
+  function fromB64(b64,type){
+    var bin=atob(b64),n=bin.length,u=new Uint8Array(n);
+    for(var i=0;i<n;i++)u[i]=bin.charCodeAt(i);
+    return new Blob([u],{type:type||"application/octet-stream"});
+  }
+
+  function setProg(label,pct){
+    $("prog").classList.remove("hidden");
+    $("pl").textContent=label + (pct!=null ? " ("+Math.round(pct)+"%)" : "");
+    $("pf").style.width=Math.max(4, Math.min(100, pct||100))+"%";
+  }
+  function hideProg(ms){
+    setTimeout(function(){$("prog").classList.add("hidden")}, ms||0);
+  }
+  function setChip(text, removable){
+    var c=$("chip"); c.textContent=text;
+    if(removable){
+      var a=document.createElement("a"); a.textContent="Remove bill";
+      a.onclick=function(e){e.preventDefault(); dropFile();};
+      c.appendChild(a);
+    }
+  }
+  function dropFile(){
+    picked=null; readToken++; reading=false; setChip(""); hideProg();
+    $("save").disabled=false;
+  }
+  function clearErr(){
+    $("err").textContent="";
+    ["amount","date","note"].forEach(function(i){$(i).classList.remove("bad")});
+  }
+  function showErr(msg,field){
+    $("err").textContent=msg;
+    if(field){$(field).classList.add("bad");try{$(field).focus()}catch(e){}}
+  }
+
+  function goToListRecord(recordId, recordDate){
+    switchView("dash");
+    if(recordDate){
+      var m = recordDate.slice(0, 7);
+      var mInput = $("dashMonth");
+      if(mInput && mInput.value !== m){
+        mInput.value = m;
+        renderMonthDashboard(m);
+      }
+    }
+    setTimeout(function(){
+      var el = $("rec-" + recordId);
+      if(el){
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el.classList.add("highlight-pulse");
+        setTimeout(function(){ el.classList.remove("highlight-pulse"); }, 4000);
+      } else {
+        var listEl = $("list");
+        if(listEl) listEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 250);
+  }
+
+  function showDuplicateError(dup){
+    var errBox = $("err");
+    if(!errBox) return;
+    var rec = (dup && dup.record) || {};
+    var detail = "This exact bill document was already recorded on " + (rec.date||"") + " (" + money(rec.amount) + ").";
+
+    errBox.innerHTML =
+      '<div style="background:#FFF5F5;border:1px solid #FEB2B2;border-radius:12px;padding:12px 14px;margin-top:6px;text-align:left">' +
+        '<div style="color:#C53030;font-weight:600;font-size:13px;line-height:1.45">' +
+          'Duplicate document: ' + detail + ' No duplicate records allowed.' +
+        '</div>' +
+        '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">' +
+          '<button type="button" id="btnGoToUploads" style="background:#DC2626;color:#FFF;border:0;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px">' +
+            'Go to Uploads list to delete &rarr;' +
+          '</button>' +
+          '<button type="button" id="btnOverwriteDup" style="background:#FFF;color:#C53030;border:1px solid #FEB2B2;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer">' +
+            'Delete existing & save this' +
+          '</button>' +
+        '</div>' +
+      '</div>';
+
+    var btnGo = $("btnGoToUploads");
+    if(btnGo){
+      btnGo.onclick = function(e){
+        e.preventDefault();
+        goToListRecord(rec.id, rec.date);
+      };
+    }
+
+    var btnOverwrite = $("btnOverwriteDup");
+    if(btnOverwrite){
+      btnOverwrite.onclick = async function(e){
+        e.preventDefault();
+        btnOverwrite.disabled = true;
+        btnOverwrite.textContent = "Replacing...";
+        try {
+          await deleteTransaction(rec.id);
+          toast("Existing duplicate deleted. Saving new expense...");
+          clearErr();
+          await saveSingleExpense();
+        } catch(err) {
+          showErr("Could not replace record: " + (err.message||"error"));
+        }
+      };
+    }
+
+    var btnSave = $("save");
+    if(btnSave){
+      btnSave.disabled = false;
+      btnSave.innerHTML = "<span>Save Expense</span>";
+    }
+  }
+
+  // --- Process Single Picked Bill ---
+  async function onPick(file){
+    clearErr();
+    if(!file)return;
+    var tok=++readToken;
+    var isPdf=/pdf/i.test(file.type||"")||/\.pdf$/i.test(file.name||"");
+    var isImg=/^image\//.test(file.type||"");
+    if(!isPdf && !isImg){setChip("Only PDF or image files are supported.");return;}
+    if(!file.size){setChip("Selected file is empty.");return;}
+    if(file.size > 25*1024*1024){setChip("File is over 25 MB.");return;}
+
+    // Instant duplicate validation
+    setProg("Validating file...", 10);
+    var fileHash = await computeFileHash(file);
+    if(tok !== readToken) return;
+
+    // Attach picked immediately so any subsequent action or field edit knows this document is attached
+    picked={file:file, isPdf:isPdf, hash:fileHash};
+
+    var existingRecs = getLocalRecords();
+    var dup = findDuplicateRecord(existingRecs, { fileHash: fileHash, file: file });
+    if(dup){
+      setChip(file.name, true);
+      showDuplicateError(dup);
+      toast("Duplicate bill document detected.");
+      hideProg();
+      var btnSave = $("save");
+      if(btnSave){
+        btnSave.disabled = false;
+        btnSave.innerHTML = "<span>Save Expense</span>";
+      }
+      return;
+    }
+
+    reading=true; $("save").disabled=true;
+    setChip("", true);
+    setProg("Opening bill...", 20);
+
+    try{
+      var extracted = null;
+
+      // 1. If PDF: Extract embedded text first (super fast and accurate)
+      if(isPdf){
+        setProg("Extracting text from PDF...", 35);
+        try{
+          var pdfText = await extractTextFromPdf(file);
+          if(pdfText && pdfText.trim().length > 20){
+            extracted = parseInvoiceText(pdfText);
+          }
+        }catch(e){console.warn("PDF text error", e);}
+      }
+
+      // 2. If not extracted or is image: try Serverless function (/api/read)
+      if(!extracted || !extracted.amount){
+        setProg("Reading bill...", 50);
+        try{
+          var shrunk = await shrink(file);
+          var b64 = await toB64(shrunk);
+          var res = await fetch("/api/read", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ images: [b64] })
+          });
+          if(res.ok){
+            var data = await res.json();
+            if(data && (data.total || data.merchant)){
+              extracted = {
+                amount: data.total,
+                merchant: data.merchant,
+                date: data.date,
+                category: data.category,
+                items: data.items || []
+              };
+            }
+          }
+        }catch(e){console.warn("API read error", e);}
+      }
+
+      // 3. Client-Side OCR Fallback (Tesseract.js) if still needed
+      if((!extracted || !extracted.amount) && isImg){
+        setProg("Running OCR on receipt...", 65);
+        try{
+          var ocrBlob = await shrink(file);
+          var ocrText = await extractTextWithTesseract(ocrBlob);
+          if(ocrText && ocrText.trim().length > 15){
+            extracted = parseInvoiceText(ocrText);
+          }
+        }catch(e){console.warn("OCR error", e);}
+      }
+
+      if(tok !== readToken) return;
+
+      // 4. Populate Form with Extracted Data
+      if(extracted){
+        var filled = [];
+        if(extracted.amount){
+          $("amount").value = String(extracted.amount);
+          filled.push(money(extracted.amount));
+        }
+        if(extracted.merchant){
+          $("note").value = extracted.merchant;
+          filled.push(extracted.merchant);
+        }
+        if(extracted.date){
+          $("date").value = extracted.date;
+          filled.push(extracted.date);
+        }
+        if(extracted.category){
+          selectCategory(extracted.category);
+          filled.push(extracted.category);
+        }
+
+        setProg("Auto-filled!", 100);
+        if(filled.length){
+          setChip("Read: " + filled.join(" · ") + ". Check details and save.", true);
+        } else {
+          setChip("Bill opened. Please enter details manually.", true);
+        }
+      } else {
+        setChip("Could not automatically read details. Please enter manually.", true);
+      }
+    }catch(err){
+      if(tok===readToken) setChip("Auto-fill notice: Please verify and enter amount.", true);
+    }finally{
+      if(tok===readToken){
+        reading=false;
+        $("save").disabled=false;
+        hideProg(800);
+      }
+    }
+  }
+
+  // --- Save Expense (Single) ---
+  async function saveSingleExpense(){
+    clearErr();
+    var a = parseAmount($("amount").value);
+    if(a.error) return showErr(a.error, "amount");
+    var dt = normDate($("date").value);
+    if(!dt) return showErr("Pick a valid date", "date");
+    var note = cleanText($("note").value);
+    if(!picked && note){
+      var autoCat = classifyItem(note);
+      if(autoCat) selectCategory(autoCat);
+    }
+    if(!note) note = selectedCategory;
+
+    var btn = $("save");
+    btn.disabled=true;
+    btn.innerHTML="<span>Saving...</span>";
+
+    try{
+      var fileHash = picked ? (picked.hash || await computeFileHash(picked.file)) : null;
+
+      // Duplicate validation before saving - STRICTLY BY SAME DOCUMENT
+      var existingList = getLocalRecords();
+      var dup = findDuplicateRecord(existingList, {
+        fileHash: fileHash,
+        file: picked ? picked.file : null,
+        inv: picked ? { name: picked.file.name, size: picked.file.size, hash: fileHash } : null
+      });
+      if(dup){
+        btn.disabled = false;
+        btn.innerHTML = "<span>Save Expense</span>";
+        return showDuplicateError(dup);
+      }
+
+      var inv=null, b64=null;
+      if(picked){
+        var b = await shrink(picked.file);
+        b64 = await toB64(b);
+        inv = { 
+          name: cleanText(picked.file.name||"bill", 100), 
+          type: b.type||picked.file.type||"application/octet-stream",
+          size: picked.file.size,
+          hash: fileHash
+        };
+      }
+
+      var rec = {
+        id: Date.now() + "-" + Math.random().toString(36).slice(2,7),
+        amount: a.value,
+        date: dt,
+        note: note,
+        category: selectedCategory,
+        transferType: selectedCategory==="Money Transfer" ? selectedTransferType : null,
+        items: [],
+        inv: inv,
+        fileHash: fileHash,
+        hash: fileHash,
+        b64: b64, // cached locally for preview
+        createdAt: new Date().toISOString()
+      };
+
+      await saveTransaction(rec, b64);
+
+      // Reset form
+      $("amount").value="";
+      $("note").value="";
+      $("date").value=today();
+      dropFile();
+
+      toast("Saved! Switching to Dashboard...");
+
+      // Automatically switch to Dashboard view
+      setTimeout(function(){
+        switchView("dash");
+      }, 500);
+
+    }catch(e){
+      showErr("Could not save: " + (e.message||"error"));
+    }finally{
+      btn.disabled=false;
+      btn.innerHTML="<span>Save expense</span>";
+    }
+  }
+
+  // --- Batch Upload UI & Logic ---
+  var MAXFILES=10, batch=[], batchBusy=false, batchSeq=0, running=0;
+
+  function setBProg(l, pct){
+    $("bprog").classList.remove("hidden");
+    $("bpl").textContent=l;
+    $("bpf").style.width=Math.max(4, Math.min(100, pct))+"%";
+  }
+  function hideBProg(){$("bprog").classList.add("hidden")}
+
+  function makeBatchItem(file, hash){
+    var it = {
+      file: file,
+      hash: hash || file._computedHash || null,
+      isPdf: /pdf/i.test(file.type||"")||/\.pdf$/i.test(file.name||""),
+      category: "Groceries",
+      items: [],
+      state: "queued",
+      seq: ++batchSeq
+    };
+    var el = document.createElement("div"); el.className="bi";
+    el.innerHTML =
+      '<div class="bh"><span class="bn"></span><a href="#" class="bx">Remove</a></div><div class="bs"></div>' +
+      '<div class="bf">' +
+        '<div class="row">' +
+          '<input class="ba" type="text" inputmode="decimal" placeholder="Amount (₹)" autocomplete="off">' +
+          '<input class="bd" type="date">' +
+        '</div>' +
+        '<div class="row" style="margin-top:6px">' +
+          '<select class="bcat"></select>' +
+          '<input class="bnote" type="text" placeholder="Note / Store" autocomplete="off">' +
+        '</div>' +
+      '</div>' +
+      '<div class="ferr be"></div>';
+
+    el.querySelector(".bn").textContent = file.name || "Bill";
+    var catSelect = el.querySelector(".bcat");
+    catSelect.innerHTML = CATEGORIES.map(function(c){return '<option value="'+c.id+'">'+c.icon+' '+c.name+'</option>'}).join("");
+
+    it.el = el;
+    it.msgEl = el.querySelector(".bs");
+    it.aEl = el.querySelector(".ba");
+    it.dEl = el.querySelector(".bd");
+    it.cEl = catSelect;
+    it.nEl = el.querySelector(".bnote");
+    it.errEl = el.querySelector(".be");
+    it.dEl.value = today();
+
+    el.querySelector(".bx").onclick = function(e){
+      e.preventDefault();
+      if(batchBusy) return;
+      it.removed=true;
+      if(el.parentNode) el.parentNode.removeChild(el);
+      batch = batch.filter(function(o){return o!==it});
+      if(!batch.length) exitBatch(); else updateBatchUI();
+    };
+
+    it.msgEl.textContent = "Waiting to read...";
+    return it;
+  }
+
+  function updateBatchUI(){
+    var live = batch.filter(function(i){return !i.removed});
+    var pend = live.filter(function(i){return i.state==="queued"||i.state==="reading"}).length;
+    var ready = live.filter(function(i){return i.state==="ready"||i.state==="manual"}).length;
+    $("bhead").textContent = live.length + (live.length===1 ? " bill" : " bills");
+    var b = $("bsave");
+    b.textContent = batchBusy ? "Saving..." : "Save " + ready + (ready===1 ? " expense" : " expenses");
+    b.disabled = batchBusy || pend > 0 || ready === 0;
+    $("bclear").disabled = batchBusy;
+    $("badd").classList.toggle("hidden", live.length >= MAXFILES || batchBusy);
+    if(!batchBusy){
+      if(pend > 0) setBProg("Reading " + (live.length - pend + 1) + " of " + live.length, ((live.length - pend)/live.length)*100);
+      else hideBProg();
+    }
+  }
+
+  function exitBatch(){
+    batch=[]; running=0; batchBusy=false;
+    $("blist").innerHTML=""; $("berr").textContent=""; hideBProg();
+    $("batch").classList.add("hidden"); $("formcard").classList.remove("hidden");
+    $("addtitle").textContent = "Add expense";
+  }
+
+  async function addToBatch(files){
+    var ok = [];
+    files.forEach(function(f){
+      if((/pdf/i.test(f.type||"")||/\.pdf$/i.test(f.name||"")||/^image\//.test(f.type||"")) && f.size > 0 && f.size < 25*1024*1024){
+        ok.push(f);
+      }
+    });
+    if(!ok.length && !batch.length){ setChip("Please select valid images or PDFs."); return; }
+
+    // Validate duplicate files:
+    // 1. Across currently selected files
+    // 2. Against existing queue items
+    // 3. Against already saved records in database
+    var existingRecs = getLocalRecords();
+    var currentQueueHashes = new Set();
+    batch.forEach(function(b){ if(b.hash) currentQueueHashes.add(b.hash); });
+
+    var uniqueFiles = [];
+    var seenInSelection = new Set();
+    var duplicateInSelectionCount = 0;
+    var alreadyRecordedCount = 0;
+
+    for(var i=0; i<ok.length; i++){
+      var f = ok[i];
+      var h = await computeFileHash(f);
+      f._computedHash = h;
+
+      if(seenInSelection.has(h) || currentQueueHashes.has(h)){
+        duplicateInSelectionCount++;
+        continue;
+      }
+
+      var alreadyExists = existingRecs.some(function(r){
+        var rHash = r.fileHash || r.hash || (r.inv && r.inv.hash);
+        if(rHash && rHash === h) return true;
+        if(r.inv && r.inv.name === f.name && r.inv.size === f.size) return true;
+        return false;
+      });
+
+      if(alreadyExists){
+        alreadyRecordedCount++;
+        continue;
+      }
+
+      seenInSelection.add(h);
+      uniqueFiles.push(f);
+    }
+
+    var totalRejected = duplicateInSelectionCount + alreadyRecordedCount;
+    if(!uniqueFiles.length){
+      if(alreadyRecordedCount > 0){
+        toast("Files rejected: already recorded in your expenses. No duplicates allowed.");
+      } else if(duplicateInSelectionCount > 0){
+        toast("Duplicate files rejected. Only 1 unique record allowed; identical files excluded.");
+      }
+      if(!batch.length) dropFile();
+      return;
+    }
+
+    if(totalRejected > 0){
+      toast("Duplicate validation: Accepted " + uniqueFiles.length + " unique bill(s). Filtered out " + totalRejected + " duplicate(s).");
+    }
+
+    var room = Math.max(0, MAXFILES - batch.length);
+    if(uniqueFiles.length > room) uniqueFiles = uniqueFiles.slice(0, room);
+
+    dropFile();
+    $("formcard").classList.add("hidden");
+    $("batch").classList.remove("hidden");
+    $("addtitle").textContent = "Add multiple expenses";
+
+    uniqueFiles.forEach(function(f){
+      var it = makeBatchItem(f, f._computedHash);
+      batch.push(it);
+      $("blist").appendChild(it.el);
+    });
+
+    updateBatchUI();
+    runBatchQueue();
+  }
+
+  async function processBatchItem(it){
+    it.state="reading";
+    it.msgEl.textContent="Reading bill...";
+    var parsed=null;
+
+    if(it.isPdf){
+      try{
+        var txt = await extractTextFromPdf(it.file);
+        if(txt) parsed = parseInvoiceText(txt);
+      }catch(e){}
+    }
+    if(!parsed || !parsed.amount){
+      try{
+        var sh = await shrink(it.file);
+        var b64 = await toB64(sh);
+        var r = await fetch("/api/read", {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({ images: [b64] })
+        });
+        if(r.ok){
+          var d = await r.json();
+          if(d && (d.total || d.merchant)){
+            parsed = { amount: d.total, merchant: d.merchant, date: d.date, category: d.category, items: d.items||[] };
+          }
+        }
+      }catch(e){}
+    }
+    if((!parsed || !parsed.amount) && !it.isPdf){
+      try{
+        var ocrBlob = await shrink(it.file);
+        var ocrText = await extractTextWithTesseract(ocrBlob);
+        if(ocrText) parsed = parseInvoiceText(ocrText);
+      }catch(e){}
+    }
+
+    if(it.removed) return;
+
+    if(parsed){
+      if(parsed.amount) it.aEl.value = String(parsed.amount);
+      if(parsed.merchant) it.nEl.value = parsed.merchant;
+      if(parsed.category) it.cEl.value = parsed.category;
+      it.items = [];
+      it.state="ready";
+      it.msgEl.textContent="Auto-filled. Check details.";
+    } else {
+      it.state="manual";
+      it.msgEl.textContent="Please enter amount manually.";
+    }
+  }
+
+  function runBatchQueue(){
+    var next;
+    while(running < 2 && (next = batch.filter(function(i){return i.state==="queued" && !i.removed})[0])){
+      running++;
+      (function(it){
+        processBatchItem(it).catch(function(){}).then(function(){
+          running--;
+          updateBatchUI();
+          runBatchQueue();
+        });
+      })(next);
+    }
+    updateBatchUI();
+  }
+
+  async function saveAllBatch(){
+    if(batchBusy) return;
+    $("berr").textContent="";
+    var live = batch.filter(function(i){return !i.removed && i.state!=="saved"});
+    var toSave = [];
+    var existingRecs = getLocalRecords();
+    var batchSeenSignatures = new Set();
+    var duplicatesSkipped = 0;
+
+    for(var k=0; k<live.length; k++){
+      var it = live[k];
+      var a = parseAmount(it.aEl.value);
+      var dt = normDate(it.dEl.value);
+      if(a.error || !dt){
+        it.errEl.textContent = a.error || "Pick a valid date";
+        $("berr").textContent = "Please fix errors before saving.";
+        return;
+      }
+      var note = cleanText(it.nEl.value) || it.cEl.value;
+      var fileH = it.hash || (it.file ? await computeFileHash(it.file) : null);
+      it.hash = fileH;
+
+      // Duplicate check against existing stored records - STRICTLY BY SAME DOCUMENT
+      var dup = findDuplicateRecord(existingRecs, {
+        fileHash: fileH,
+        file: it.file,
+        inv: it.file ? { name: it.file.name, size: it.file.size, hash: fileH } : null
+      });
+
+      // Also check against other items within this same batch (strictly by document)
+      var docSig = fileH || (it.file ? (it.file.name + "_" + it.file.size) : null);
+      if(dup || (docSig && batchSeenSignatures.has(docSig))){
+        duplicatesSkipped++;
+        it.state = "duplicate";
+        it.errEl.textContent = "Duplicate bill document detected. Record skipped.";
+        it.el.classList.add("done");
+        continue;
+      }
+      if(docSig) batchSeenSignatures.add(docSig);
+      toSave.push({
+        it: it,
+        amount: a.value,
+        date: dt,
+        category: it.cEl.value,
+        note: note,
+        items: it.items || [],
+        hash: fileH
+      });
+    }
+
+    if(toSave.length === 0){
+      $("berr").textContent = "No unique expenses to save. Duplicate records were rejected.";
+      toast("Duplicate records rejected. No duplicates allowed.");
+      return;
+    }
+
+    batchBusy=true;
+    updateBatchUI();
+    setBProg("Saving expenses...", 30);
+
+    var savedCount = 0;
+    for(var s=0; s<toSave.length; s++){
+      var itemData = toSave[s];
+      var itm = itemData.it;
+      try{
+        var b = await shrink(itm.file);
+        var b64 = await toB64(b);
+        var inv = { 
+          name: cleanText(itm.file.name||"bill", 100), 
+          type: b.type||itm.file.type||"application/octet-stream",
+          size: itm.file.size,
+          hash: itemData.hash
+        };
+        var rec = {
+          id: Date.now() + "-" + Math.random().toString(36).slice(2,7),
+          amount: itemData.amount,
+          date: itemData.date,
+          note: itemData.note,
+          category: itemData.category,
+          items: itemData.items,
+          inv: inv,
+          fileHash: itemData.hash,
+          hash: itemData.hash,
+          b64: b64,
+          createdAt: new Date().toISOString()
+        };
+        await saveTransaction(rec, b64);
+        savedCount++;
+        itm.state="saved";
+        itm.el.classList.add("done");
+      }catch(e){
+        itm.errEl.textContent = e.message || "Could not save";
+      }
+    }
+
+    batchBusy=false;
+    if(duplicatesSkipped > 0){
+      toast("Saved " + savedCount + " unique bill(s). " + duplicatesSkipped + " duplicate(s) rejected.");
+    } else {
+      toast("All bills saved! Switching to Dashboard...");
+    }
+    setTimeout(function(){
+      exitBatch();
+      switchView("dash");
+    }, 700);
+  }
+
+  // --- Dashboard Analytics & Spend Intelligence ---
+  var currentFilter = "all";
+
+  async function renderDashboard(){
+    var m = $("dashMonth").value || today().slice(0,7);
+    var allRecs = await getAllTransactions();
+
+    // 1. Current Month Transactions
+    var monthRecs = allRecs.filter(function(r){return r.date.slice(0,7)===m});
+
+    // Calculate Totals:
+    // EXCLUDE Self Transfers and Money Received from Total Expense
+    var expenseTotal = 0;
+    var inflowTotal = 0;
+    var selfTransferTotal = 0;
+    var expenseCount = 0;
+
+    var categoryTotals = {};
+    var allItemsExtracted = [];
+
+    monthRecs.forEach(function(r){
+      var amt = Number(r.amount) || 0;
+      var isSelfTransfer = r.category === "Money Transfer" && r.transferType === "self";
+      var isReceived = r.category === "Money Transfer" && r.transferType === "received";
+
+      if(isSelfTransfer){
+        selfTransferTotal += amt;
+      } else if(isReceived){
+        inflowTotal += amt;
+      } else {
+        // Genuine expense
+        expenseTotal += amt;
+        expenseCount++;
+        var cat = r.category || "Groceries";
+        categoryTotals[cat] = (categoryTotals[cat] || 0) + amt;
+      }
+
+      // Collect items from bills
+      if(Array.isArray(r.items)){
+        r.items.forEach(function(item){
+          if(item) allItemsExtracted.push({ name: item, cat: r.category });
+        });
+      }
+    });
+
+    // Update KPI Cards
+    $("kpiExpense").textContent = money(expenseTotal);
+    $("kpiCount").textContent = expenseCount + (expenseCount===1 ? " expense" : " expenses") + " in " + formatMonth(m);
+    $("kpiInflow").textContent = money(inflowTotal);
+    $("kpiSelf").textContent = money(selfTransferTotal);
+
+    // Visual 1: Trend & Leakage Tracker (DoD, WoW, MoM)
+    renderTrendInfographic(allRecs, m, currentTrendMode);
+
+    // Visual 2: Category Expense Histogram & Everyday Usage (Full Distribution)
+    renderCategoryHistogram(monthRecs, expenseTotal);
+
+    // Transactions List
+    renderTransactionList(monthRecs);
+  }
+
+  function renderCategoryHistogram(monthRecs, expenseTotal){
+    var histEl = $("categoryHistogram");
+    if(!histEl) return;
+    var catMap = {};
+    var catDays = {};
+    var catTxCount = {};
+
+    CATEGORIES.forEach(function(c){
+      catMap[c.id] = 0;
+      catDays[c.id] = {};
+      catTxCount[c.id] = 0;
+    });
+
+    monthRecs.forEach(function(r){
+      var isSelf = r.category === "Money Transfer" && r.transferType === "self";
+      var isRecv = r.category === "Money Transfer" && r.transferType === "received";
+      if(isSelf || isRecv) return;
+
+      var amt = Number(r.amount) || 0;
+
+      var targetCat = r.category || "Groceries";
+      if(catMap[targetCat] == null) targetCat = "Groceries";
+      catMap[targetCat] += amt;
+      catDays[targetCat][r.date] = true;
+      catTxCount[targetCat]++;
+    });
+
+    // The curated consumer expense categories for the histogram distribution
+    var histCats = CATEGORIES.filter(function(c){
+      return c.id !== "Money Transfer"; // Transfers excluded from consumer expense distribution
+    });
+
+    // Find max spend across categories to scale column heights
+    var maxSpend = 0;
+    var highestCat = null;
+    histCats.forEach(function(c){
+      var val = catMap[c.id] || 0;
+      if(val > maxSpend){
+        maxSpend = val;
+        highestCat = c;
+      }
+    });
+
+    var histEl = $("categoryHistogram");
+    var pillsEl = $("categoryBreakdownPills");
+    var dailyGridEl = $("dailyActiveCategories");
+
+    var chartHeight = 145; // Maximum pixel height for active bar
+
+    function getBarContrast(hex){
+      if(!hex) return { text: "#FFFFFF", shadow: "0 1px 2px rgba(0,0,0,0.5)" };
+      var clean = hex.replace("#", "");
+      if(clean.length === 3) clean = clean[0]+clean[0]+clean[1]+clean[1]+clean[2]+clean[2];
+      var r = parseInt(clean.substring(0,2), 16);
+      var g = parseInt(clean.substring(2,4), 16);
+      var b = parseInt(clean.substring(4,6), 16);
+      var yiq = ((r*299) + (g*587) + (b*114)) / 1000;
+      if(yiq >= 160){
+        return { text: "#0F172A", shadow: "0 1px 1px rgba(255,255,255,0.4)" };
+      }
+      return { text: "#FFFFFF", shadow: "0 1px 2px rgba(0,0,0,0.6)" };
+    }
+
+    // Render Histogram Columns for ALL categories (Full Distribution)
+    histEl.innerHTML = histCats.map(function(c){
+      var total = catMap[c.id] || 0;
+      var hasSpend = total > 0;
+      var barH = hasSpend ? Math.max(28, Math.round((total / maxSpend) * chartHeight)) : 6;
+      var daysCount = Object.keys(catDays[c.id] || {}).length;
+      var contrast = getBarContrast(c.color);
+      var catLabel = esc(c.shortName || c.name);
+
+      var barHtml;
+      if(hasSpend){
+        barHtml = '<div class="histogram-bar" style="height:' + barH + 'px;background:' + (c.grad || c.color) + ';box-shadow:0 3px 12px ' + c.color + '55">' +
+          '<div class="histogram-bar-label" style="color:' + contrast.text + ';text-shadow:' + contrast.shadow + '">' + catLabel + '</div>' +
+        '</div>';
+      } else {
+        barHtml = '<div class="histogram-bar zero" style="background:var(--line)">' +
+          '<div class="histogram-bar-label zero-label">' + catLabel + '</div>' +
+        '</div>';
+      }
+
+      var amtLabel = hasSpend
+        ? '<div class="histogram-amt" style="color:' + c.color + '">' + money(total) + '</div>'
+        : '<div class="histogram-amt" style="color:var(--mute);font-weight:500">₹0</div>';
+
+      return '<div class="histogram-col" data-cat="' + esc(c.id) + '" title="' + esc(c.name) + ': ' + money(total) + (daysCount ? ' · ' + daysCount + ' active days' : '') + '">' +
+        barHtml +
+        '<div class="histogram-axis">' +
+          amtLabel +
+        '</div>' +
+      '</div>';
+    }).join("");
+
+    // Active Category Breakdown Pills
+    var activeCats = histCats.filter(function(c){return (catMap[c.id] || 0) > 0})
+      .sort(function(a,b){return catMap[b.id] - catMap[a.id]});
+
+    if(pillsEl){
+      if(!activeCats.length){
+        pillsEl.innerHTML = '<div style="font-size:12px;color:var(--mute);padding:4px 0">No active category spend this month.</div>';
+      } else {
+        pillsEl.innerHTML = activeCats.map(function(c){
+          var val = catMap[c.id];
+          return '<div class="cat-breakdown-pill">' +
+            '<span class="cat-breakdown-dot" style="background:' + c.color + '"></span>' +
+            '<span>' + esc(c.name) + '</span>' +
+            '<b style="color:' + c.color + '">' + money(val) + '</b>' +
+          '</div>';
+        }).join("");
+      }
+    }
+
+    // Top Categories Used Everyday (Sorted by days active)
+    var activeByDays = activeCats.filter(function(c){
+      return Object.keys(catDays[c.id] || {}).length > 0;
+    }).sort(function(a,b){
+      return Object.keys(catDays[b.id]).length - Object.keys(catDays[a.id]).length;
+    });
+
+    if(!activeByDays.length){
+      dailyGridEl.innerHTML = '<div class="empty" style="grid-column:1/-1;padding:8px 0">No everyday categories active yet.</div>';
+    } else {
+      dailyGridEl.innerHTML = activeByDays.slice(0, 6).map(function(c){
+        var dCount = Object.keys(catDays[c.id] || {}).length;
+        return '<div class="everyday-cat-chip">' +
+          '<div class="everyday-cat-label">' + esc(c.name) + '</div>' +
+          '<div class="everyday-cat-count" style="color:' + c.color + ';background:' + c.color + '15">' + dCount + (dCount === 1 ? ' day' : ' days') + '</div>' +
+        '</div>';
+      }).join("");
+    }
+  }
+
+  var currentTrendMode = "dod"; // "dod", "wow", "mom"
+  var allCachedTransactions = [];
+
+  function renderTrendInfographic(allRecs, currentMonth, mode){
+    allCachedTransactions = allRecs;
+    var svg = $("trendSvg");
+    var titleEl = $("trendTitle");
+    var tooltip = $("chartTooltip");
+    var compBox = $("trendComparisonBox");
+
+    // Filter genuine expenses (strictly exclude self transfer & received money)
+    function isExpense(r){
+      var isSelf = r.category === "Money Transfer" && r.transferType === "self";
+      var isRecv = r.category === "Money Transfer" && r.transferType === "received";
+      return !isSelf && !isRecv;
+    }
+
+    var dataPoints = [];
+    var avgVal = 0;
+    var hasComparison = false;
+    var comparisonHtml = "";
+
+    if(mode === "dod"){
+      // Everyday Expense Trend for the selected month (Day 1 to 28/30/31)
+      titleEl.textContent = "Daily Velocity";
+
+      var parts = currentMonth.split("-");
+      var yr = +parts[0], mo = +parts[1];
+      var daysInMonth = new Date(Date.UTC(yr, mo, 0)).getUTCDate();
+
+      var dailyMap = {};
+      for(var d = 1; d <= daysInMonth; d++){
+        var iso = currentMonth + "-" + pad(d);
+        dailyMap[iso] = 0;
+      }
+
+      var monthTotal = 0;
+      allRecs.filter(function(r){return r.date.slice(0,7) === currentMonth && isExpense(r)}).forEach(function(r){
+        var amt = Number(r.amount) || 0;
+        dailyMap[r.date] = (dailyMap[r.date] || 0) + amt;
+        monthTotal += amt;
+      });
+
+      var activeDaysList = [];
+      for(var day = 1; day <= daysInMonth; day++){
+        var dayIso = currentMonth + "-" + pad(day);
+        var val = dailyMap[dayIso] || 0;
+        if(val > 0){
+          activeDaysList.push({ day: day, date: dayIso, val: val });
+        }
+      }
+
+      if(activeDaysList.length >= 3){
+        hasComparison = true;
+        avgVal = monthTotal / activeDaysList.length;
+
+        var spikeDays = [];
+        for(var day = 1; day <= daysInMonth; day++){
+          var dayIso = currentMonth + "-" + pad(day);
+          var val = dailyMap[dayIso] || 0;
+          var isSpike = val >= avgVal * 1.5;
+          if(isSpike) spikeDays.push({ day: day, val: val });
+          dataPoints.push({
+            label: String(day),
+            fullDate: dayIso,
+            value: val,
+            isLeakage: isSpike
+          });
+        }
+
+        if(spikeDays.length > 0){
+          comparisonHtml = '<b>Daily Velocity:</b> Baseline <b>' + money(avgVal) + '</b>/day · Spend spike on Day ' + spikeDays.map(function(s){return s.day + ' (' + money(s.val) + ')'}).join(', ') + '.';
+        } else {
+          comparisonHtml = '<b>Daily Velocity:</b> Steady spend · Average baseline <b>' + money(avgVal) + '</b> across ' + activeDaysList.length + ' active days.';
+        }
+
+      } else if(activeDaysList.length === 2){
+        hasComparison = false;
+        avgVal = 0;
+        for(var day = 1; day <= daysInMonth; day++){
+          var dayIso = currentMonth + "-" + pad(day);
+          var val = dailyMap[dayIso] || 0;
+          dataPoints.push({
+            label: String(day),
+            fullDate: dayIso,
+            value: val,
+            isLeakage: false
+          });
+        }
+        var d1 = activeDaysList[0], d2 = activeDaysList[1];
+        var diff = d2.val - d1.val;
+        var pct = d1.val > 0 ? Math.round((diff / d1.val) * 100) : 0;
+        var diffWord = diff >= 0 ? ('+' + pct + '% (+' + money(diff) + ')') : (pct + '% (' + money(diff) + ')');
+        comparisonHtml = '<b>Daily Velocity:</b> Day ' + d2.day + ' (' + money(d2.val) + ') is <b>' + diffWord + '</b> vs Day ' + d1.day + ' (' + money(d1.val) + ').';
+
+      } else if(activeDaysList.length === 1){
+        hasComparison = false;
+        avgVal = 0;
+        for(var day = 1; day <= daysInMonth; day++){
+          var dayIso = currentMonth + "-" + pad(day);
+          var val = dailyMap[dayIso] || 0;
+          dataPoints.push({
+            label: String(day),
+            fullDate: dayIso,
+            value: val,
+            isLeakage: false
+          });
+        }
+        comparisonHtml = '<b>Daily Velocity:</b> Recorded spend for Day ' + activeDaysList[0].day + ': <b>' + money(activeDaysList[0].val) + '</b>.';
+
+      } else {
+        hasComparison = false;
+        avgVal = 0;
+        for(var day = 1; day <= daysInMonth; day++){
+          var dayIso = currentMonth + "-" + pad(day);
+          dataPoints.push({ label: String(day), fullDate: dayIso, value: 0, isLeakage: false });
+        }
+        comparisonHtml = 'No expenses recorded for this period.';
+      }
+
+    } else if(mode === "wow"){
+      // Week on Week Trend
+      titleEl.textContent = "Weekly Velocity";
+
+      var weeks = [
+        { name: "Week 1 (1-7)", start: 1, end: 7, total: 0 },
+        { name: "Week 2 (8-14)", start: 8, end: 14, total: 0 },
+        { name: "Week 3 (15-21)", start: 15, end: 21, total: 0 },
+        { name: "Week 4 (22-28)", start: 22, end: 28, total: 0 },
+        { name: "Week 5 (29+)", start: 29, end: 31, total: 0 }
+      ];
+
+      allRecs.filter(function(r){return r.date.slice(0,7) === currentMonth && isExpense(r)}).forEach(function(r){
+        var d = +r.date.slice(8,10);
+        var amt = Number(r.amount) || 0;
+        for(var w = 0; w < weeks.length; w++){
+          if(d >= weeks[w].start && d <= weeks[w].end){
+            weeks[w].total += amt;
+            break;
+          }
+        }
+      });
+
+      var activeWeeks = weeks.filter(function(w){return w.total > 0});
+      dataPoints = weeks.map(function(w, idx){
+        return { label: "W" + (idx + 1), fullDate: w.name, value: w.total, isLeakage: false };
+      });
+
+      if(activeWeeks.length >= 2){
+        hasComparison = true;
+        avgVal = activeWeeks.reduce(function(a,b){return a + b.total}, 0) / activeWeeks.length;
+        var wCur = activeWeeks[activeWeeks.length - 1], wPrev = activeWeeks[activeWeeks.length - 2];
+        var wDiff = wCur.total - wPrev.total;
+        var wPct = wPrev.total > 0 ? Math.round((wDiff / wPrev.total) * 100) : 0;
+        comparisonHtml = '<b>Weekly Velocity:</b> ' + wCur.name + ' (' + money(wCur.total) + ') is <b>' + (wDiff >= 0 ? '+' + wPct + '%' : wPct + '%') + '</b> vs ' + wPrev.name + ' (' + money(wPrev.total) + ') · Avg ' + money(avgVal) + '.';
+      } else if(activeWeeks.length === 1){
+        hasComparison = false;
+        avgVal = 0;
+        comparisonHtml = '<b>Weekly Velocity:</b> ' + activeWeeks[0].name + ' spend: <b>' + money(activeWeeks[0].total) + '</b>.';
+      } else {
+        hasComparison = false;
+        avgVal = 0;
+        comparisonHtml = 'No weekly expenses recorded for this month.';
+      }
+
+    } else if(mode === "mom"){
+      // Month on Month Trend (last 6 months)
+      titleEl.textContent = "Monthly Velocity";
+
+      var mList = [];
+      var parts = currentMonth.split("-");
+      var baseYear = +parts[0], baseMonth = +parts[1];
+
+      for(var mOffset = 5; mOffset >= 0; mOffset--){
+        var dObj = new Date(Date.UTC(baseYear, baseMonth - 1 - mOffset, 1));
+        var isoM = dObj.getUTCFullYear() + "-" + pad(dObj.getUTCMonth() + 1);
+        mList.push({ iso: isoM, label: formatMonth(isoM).slice(0,3) });
+      }
+
+      dataPoints = mList.map(function(item){
+        var mTot = 0;
+        allRecs.filter(function(r){return r.date.slice(0,7) === item.iso && isExpense(r)}).forEach(function(r){
+          mTot += (Number(r.amount) || 0);
+        });
+        return { label: item.label, fullDate: formatMonth(item.iso), value: mTot, isLeakage: false };
+      });
+
+      var activeMonths = dataPoints.filter(function(m){return m.value > 0});
+      if(activeMonths.length >= 2){
+        hasComparison = true;
+        avgVal = activeMonths.reduce(function(a,b){return a + b.value}, 0) / activeMonths.length;
+        var mCur = activeMonths[activeMonths.length - 1], mPrev = activeMonths[activeMonths.length - 2];
+        var mDiff = mCur.value - mPrev.value;
+        var mPct = mPrev.value > 0 ? Math.round((mDiff / mPrev.value) * 100) : 0;
+        comparisonHtml = '<b>Monthly Velocity:</b> ' + mCur.fullDate + ' (' + money(mCur.value) + ') is <b>' + (mDiff >= 0 ? '+' + mPct + '%' : mPct + '%') + '</b> vs ' + mPrev.fullDate + ' (' + money(mPrev.value) + ') · Avg ' + money(avgVal) + '.';
+      } else if(activeMonths.length === 1){
+        hasComparison = false;
+        avgVal = 0;
+        comparisonHtml = '<b>Monthly Velocity:</b> ' + activeMonths[0].fullDate + ' spend: <b>' + money(activeMonths[0].value) + '</b>.';
+      } else {
+        hasComparison = false;
+        avgVal = 0;
+        comparisonHtml = 'No monthly expenses recorded yet.';
+      }
+    }
+
+    if(compBox){
+      compBox.innerHTML = comparisonHtml;
+    }
+
+    drawTrendSvg(svg, dataPoints, avgVal, tooltip, hasComparison);
+  }
+
+  function drawTrendSvg(svg, dataPoints, avgVal, tooltip, hasComparison){
+    var width = 520, height = 210;
+    var padLeft = 45, padRight = 20, padTop = 25, padBottom = 35;
+    var gW = width - padLeft - padRight;
+    var gH = height - padTop - padBottom;
+
+    var maxVal = Math.max.apply(null, dataPoints.map(function(d){return d.value}).concat([avgVal * 1.25, 100]));
+    var minVal = 0;
+
+    function getX(idx){
+      if(dataPoints.length <= 1) return padLeft + gW / 2;
+      return padLeft + (idx / (dataPoints.length - 1)) * gW;
+    }
+    function getY(val){
+      return padTop + gH - ((val - minVal) / (maxVal - minVal)) * gH;
+    }
+
+    var coords = dataPoints.map(function(d, i){
+      return { x: getX(i), y: getY(d.value), val: d.value, d: d };
+    });
+
+    function getSplinePath(pts) {
+      if(pts.length === 0) return "";
+      if(pts.length === 1) return "M " + pts[0].x.toFixed(1) + "," + pts[0].y.toFixed(1);
+      var d = "M " + pts[0].x.toFixed(1) + "," + pts[0].y.toFixed(1);
+      for (var i = 0; i < pts.length - 1; i++) {
+        var p0 = pts[Math.max(i - 1, 0)];
+        var p1 = pts[i];
+        var p2 = pts[i + 1];
+        var p3 = pts[Math.min(i + 2, pts.length - 1)];
+        var cp1x = p1.x + (p2.x - p0.x) / 6;
+        var cp1y = p1.y + (p2.y - p0.y) / 6;
+        var cp2x = p2.x - (p3.x - p1.x) / 6;
+        var cp2y = p2.y - (p3.y - p1.y) / 6;
+        d += " C " + cp1x.toFixed(1) + "," + cp1y.toFixed(1) + " " + cp2x.toFixed(1) + "," + cp2y.toFixed(1) + " " + p2.x.toFixed(1) + "," + p2.y.toFixed(1);
+      }
+      return d;
+    }
+
+    var linePath = getSplinePath(coords);
+    var areaPath = coords.length ? (linePath + " L " + coords[coords.length - 1].x.toFixed(1) + "," + (padTop + gH) + " L " + coords[0].x.toFixed(1) + "," + (padTop + gH) + " Z") : "";
+    var avgY = getY(avgVal).toFixed(1);
+
+    var gridColor = "#EBE6DC";
+    var textColor = "#7D828A";
+    var lineColor = "#FF6636"; // Headspace signature sunset orange
+    var areaGradStart = "rgba(255,102,54,0.22)";
+    var areaGradStop = "rgba(255,102,54,0.01)";
+
+    var svgHtml = '';
+
+    svgHtml += '<defs>' +
+      '<linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0%" stop-color="' + areaGradStart + '" />' +
+        '<stop offset="100%" stop-color="' + areaGradStop + '" />' +
+      '</linearGradient>' +
+    '</defs>';
+
+    var ySteps = [0, maxVal / 2, maxVal];
+    ySteps.forEach(function(sVal){
+      var yPos = getY(sVal).toFixed(1);
+      svgHtml += '<line x1="' + padLeft + '" y1="' + yPos + '" x2="' + (width - padRight) + '" y2="' + yPos + '" stroke="' + gridColor + '" stroke-width="1" stroke-dasharray="2,3" />';
+      svgHtml += '<text x="' + (padLeft - 8) + '" y="' + (+yPos + 4) + '" fill="' + textColor + '" font-size="10" font-weight="600" text-anchor="end">₹' + (sVal >= 1000 ? Math.round(sVal/1000) + 'k' : Math.round(sVal)) + '</text>';
+    });
+
+    if(hasComparison && avgVal > 0){
+      svgHtml += '<line x1="' + padLeft + '" y1="' + avgY + '" x2="' + (width - padRight) + '" y2="' + avgY + '" stroke="#008775" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.9" />';
+      svgHtml += '<text x="' + (width - padRight) + '" y="' + (+avgY - 6) + '" fill="#008775" font-size="9.5" font-weight="700" text-anchor="end">Avg ₹' + Math.round(avgVal) + '</text>';
+    }
+
+    if(areaPath){
+      svgHtml += '<path d="' + areaPath + '" fill="url(#trendGrad)" />';
+      svgHtml += '<path d="' + linePath + '" fill="none" stroke="' + lineColor + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />';
+    }
+
+    var step = Math.ceil(dataPoints.length / 10);
+    coords.forEach(function(pt, i){
+      var isSpike = hasComparison && pt.d.isLeakage && pt.val > 0;
+      var dotColor = isSpike ? "#E04836" : (pt.val > 0 ? lineColor : textColor);
+      var dotRadius = isSpike ? 5.5 : (pt.val > 0 ? 4 : 2);
+
+      if(pt.val > 0){
+        svgHtml += '<circle cx="' + pt.x.toFixed(1) + '" cy="' + pt.y.toFixed(1) + '" r="' + dotRadius + '" fill="' + dotColor + '" stroke="#FFFFFF" stroke-width="2" class="data-point" data-date="' + esc(pt.d.fullDate) + '" data-val="' + pt.val + '" style="cursor:pointer" />';
+      }
+
+      if(i % step === 0 || i === dataPoints.length - 1){
+        svgHtml += '<text x="' + pt.x.toFixed(1) + '" y="' + (height - 12) + '" fill="' + textColor + '" font-size="10" font-weight="600" text-anchor="middle">' + pt.d.label + '</text>';
+      }
+    });
+
+    svg.innerHTML = svgHtml;
+
+    var wrap = $("trendGraphWrap");
+    Array.prototype.forEach.call(svg.querySelectorAll(".data-point"), function(dot){
+      function showTip(){
+        var dateStr = dot.getAttribute("data-date");
+        var valStr = money(dot.getAttribute("data-val"));
+        tooltip.innerHTML = '<b>' + dateStr + '</b><br>' + valStr;
+        tooltip.classList.add("on");
+
+        var rect = dot.getBoundingClientRect();
+        var wrapRect = wrap.getBoundingClientRect();
+        var left = rect.left - wrapRect.left + rect.width / 2;
+        var top = rect.top - wrapRect.top;
+        tooltip.style.left = left + "px";
+        tooltip.style.top = top + "px";
+      }
+
+      dot.addEventListener("mouseenter", showTip);
+      dot.addEventListener("touchstart", showTip);
+    });
+
+    wrap.onmouseleave = function(){ tooltip.classList.remove("on"); };
+  }
+
+  function addDays(iso, n){
+    var t = iso.split("-");
+    var dt = new Date(Date.UTC(+t[0], +t[1]-1, +t[2] + n));
+    return dt.getUTCFullYear() + "-" + pad(dt.getUTCMonth()+1) + "-" + pad(dt.getUTCDate());
+  }
+
+  function formatMonth(isoMonth){
+    var parts = isoMonth.split("-");
+    var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    return months[+parts[1]-1] + " " + parts[0];
+  }
+
+  // --- Uploads List Rendering ---
+  function renderTransactionList(monthRecs){
+    var list = monthRecs.slice();
+    // Sort descending by date
+    list.sort(function(a,b){return b.date.localeCompare(a.date)});
+
+    var listEl = $("list");
+    if(!list.length){
+      listEl.innerHTML = '<div class="empty">No uploads recorded for this month yet.</div>';
+      return;
+    }
+
+    listEl.innerHTML = list.map(function(r){
+      var catMeta = CATEGORIES.find(function(c){return c.id===r.category}) || { icon: "🏷️", name: r.category||"Other" };
+      var isSelf = r.category==="Money Transfer" && r.transferType==="self";
+      var isRecv = r.category==="Money Transfer" && r.transferType==="received";
+
+      var badgeHtml = '<span class="badge" style="background:var(--line);color:var(--ink)">' + catMeta.icon + ' ' + catMeta.name + '</span>';
+      var amtClass = "";
+      var prefix = "";
+
+      if(isSelf){
+        badgeHtml = '<span class="badge" style="background:var(--warn-light);color:var(--warn)">🔄 Self Transfer (Neutral)</span>';
+        amtClass = " neutral";
+      } else if(isRecv){
+        badgeHtml = '<span class="badge" style="background:var(--good-light);color:var(--good)">📥 Money Received</span>';
+        amtClass = " inflow";
+        prefix = "+";
+      }
+
+      return '<div class="item" id="rec-' + esc(r.id) + '">' +
+        '<div class="left">' +
+          '<div class="n">' + esc(r.note || r.category) + '</div>' +
+          '<div class="s"><span>' + esc(r.date) + '</span> ' + badgeHtml + '</div>' +
+          '<div class="acts">' +
+            (r.inv ? '<a href="#" data-view-id="'+esc(r.id)+'">View bill</a>' : '') +
+            '<a href="#" class="del" data-del-id="'+esc(r.id)+'">Delete</a>' +
+          '</div>' +
+        '</div>' +
+        '<div class="a' + amtClass + '">' + prefix + money(r.amount) + '</div>' +
+      '</div>';
+    }).join("");
+
+    // Action handlers
+    Array.prototype.forEach.call(listEl.querySelectorAll("[data-view-id]"), function(a){
+      a.onclick = function(e){
+        e.preventDefault();
+        viewBill(a.getAttribute("data-view-id"));
+      };
+    });
+
+    Array.prototype.forEach.call(listEl.querySelectorAll("[data-del-id]"), function(a){
+      a.onclick = async function(e){
+        e.preventDefault();
+        if(!confirm("Delete this transaction?")) return;
+        await deleteTransaction(a.getAttribute("data-del-id"));
+        toast("Deleted");
+        renderDashboard();
+      };
+    });
+  }
+
+  // --- Invoice Modal Viewer ---
+  async function viewBill(id){
+    var list = await getAllTransactions();
+    var rec = list.find(function(r){return r.id===id});
+    if(!rec || !rec.inv){ toast("No bill attachment found"); return; }
+    toast("Loading bill...");
+    try{
+      var isPdf = /pdf/i.test(rec.inv.type||"") || /\.pdf$/i.test(rec.inv.name||"");
+      var blob = null;
+      if(rec.b64){
+        blob = fromB64(rec.b64, rec.inv.type);
+      }
+      if(!blob){ toast("Bill data unavailable"); return; }
+      if(curUrl){ URL.revokeObjectURL(curUrl); curUrl=null; }
+      curUrl = URL.createObjectURL(blob);
+
+      $("vbody").innerHTML = isPdf ? '<iframe src="'+curUrl+'"></iframe>' : '<img src="'+curUrl+'" alt="Bill">';
+      $("view").classList.add("on");
+    }catch(e){toast("Could not open bill");}
+  }
+
+  function closeView(){
+    $("view").classList.remove("on");
+    $("vbody").innerHTML="";
+    if(curUrl){ URL.revokeObjectURL(curUrl); curUrl=null; }
+  }
+
+  // --- View Switcher (Input vs Dashboard) ---
+  function switchView(viewName){
+    if(viewName==="dash"){
+      $("viewInput").classList.add("hidden");
+      $("viewDash").classList.remove("hidden");
+      $("tInput").classList.remove("on");
+      $("tDash").classList.add("on");
+      renderDashboard();
+    } else {
+      $("viewDash").classList.add("hidden");
+      $("viewInput").classList.remove("hidden");
+      $("tDash").classList.remove("on");
+      $("tInput").classList.add("on");
+    }
+  }
+
+
+  // --- Export CSV & Backup ---
+  async function copyCsv(){
+    var m = $("dashMonth").value || today().slice(0,7);
+    var all = await getAllTransactions();
+    var rows = all.filter(function(r){return r.date.slice(0,7)===m});
+    if(!rows.length){ toast("No transactions to copy"); return; }
+    rows.sort(function(a,b){return a.date.localeCompare(b.date)});
+
+    var csv = "Date,Category,Subtype,Merchant,Amount,Items\n" + rows.map(function(r){
+      var itmStr = Array.isArray(r.items) ? r.items.join(" | ") : "";
+      return [
+        r.date,
+        '"'+(r.category||"")+'"',
+        '"'+(r.transferType||"")+'"',
+        '"'+cleanText(r.note||"").replace(/"/g,'""')+'"',
+        Number(r.amount).toFixed(2),
+        '"'+itmStr.replace(/"/g,'""')+'"'
+      ].join(",");
+    }).join("\n");
+
+    try{
+      await navigator.clipboard.writeText(csv);
+      toast("CSV copied to clipboard!");
+    }catch(e){
+      var ta = document.createElement("textarea"); ta.value=csv; document.body.appendChild(ta);
+      ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
+      toast("CSV copied!");
+    }
+  }
+
+  async function exportJsonBackup(){
+    var all = await getAllTransactions();
+    var blob = new Blob([JSON.stringify(all, null, 2)], {type:"application/json"});
+    var u = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = u;
+    a.download = "expenses_backup_" + today() + ".json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(u);
+    toast("Backup downloaded!");
+  }
+
+  // --- Theme Locked to Light ---
+  function initTheme(){
+    document.documentElement.setAttribute("data-theme", "light");
+    localStorage.setItem("theme_mode", "light");
+  }
+
+  // --- Event Listeners & Boot ---
+  function pickHandler(e){
+    var fs = Array.prototype.slice.call(e.target.files||[]);
+    e.target.value = "";
+    if(!fs.length) return;
+    if(fs.length > 1 || batch.length) addToBatch(fs);
+    else onPick(fs[0]);
+  }
+
+  $("cam").addEventListener("change", pickHandler);
+  $("file").addEventListener("change", pickHandler);
+  $("save").addEventListener("click", saveSingleExpense);
+  $("bsave").addEventListener("click", saveAllBatch);
+  $("bclear").addEventListener("click", function(){if(!batchBusy) exitBatch();});
+
+  $("tInput").onclick = function(){switchView("input")};
+  $("tDash").onclick = function(){switchView("dash")};
+  $("dashMonth").addEventListener("change", renderDashboard);
+  $("close").onclick = closeView;
+  $("csv").onclick = copyCsv;
+  $("exportJson").onclick = exportJsonBackup;
+
+  // Trend Mode Switcher (DoD, WoW, MoM)
+  Array.prototype.forEach.call(document.querySelectorAll(".trend-tab"), function(tab){
+    tab.onclick = function(){
+      Array.prototype.forEach.call(document.querySelectorAll(".trend-tab"), function(t){t.classList.remove("active")});
+      tab.classList.add("active");
+      currentTrendMode = tab.getAttribute("data-mode");
+      var m = $("dashMonth").value || today().slice(0,7);
+      renderTrendInfographic(allCachedTransactions, m, currentTrendMode);
+    };
+  });
+
+  // --- Account Authentication & Session Management ---
+  var AUTH_SESSION_KEY = "expense_app_session_v1";
+  var ACCOUNTS_KEY = "expense_app_accounts_v1";
+  var currentAuthMode = "login"; // "login" | "register" | "forgot"
+
+  function getStoredAccounts(){
+    try{
+      var raw = localStorage.getItem(ACCOUNTS_KEY);
+      if(raw) return JSON.parse(raw);
+    }catch(e){}
+    var defaults = [
+      { email: "bishwajeet0206pal@gmail.com", username: "bishwajeet", name: "Bishwajeet", pass: "123456" }
+    ];
+    try{ localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(defaults)); }catch(e){}
+    return defaults;
+  }
+
+  function getActiveSession(){
+    try{
+      var s = localStorage.getItem(AUTH_SESSION_KEY) || sessionStorage.getItem(AUTH_SESSION_KEY);
+      return s ? JSON.parse(s) : null;
+    }catch(e){ return null; }
+  }
+
+  function setSession(account, keepSignedIn){
+    var session = {
+      email: account.email,
+      name: account.name || account.username || account.email.split("@")[0]
+    };
+    try{
+      if(keepSignedIn){
+        localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(session));
+        sessionStorage.removeItem(AUTH_SESSION_KEY);
+      } else {
+        sessionStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(session));
+        localStorage.removeItem(AUTH_SESSION_KEY);
+      }
+    }catch(e){}
+    updateAuthUi(session);
+  }
+
+  function clearSession(){
+    try{
+      localStorage.removeItem(AUTH_SESSION_KEY);
+      sessionStorage.removeItem(AUTH_SESSION_KEY);
+    }catch(e){}
+    updateAuthUi(null);
+  }
+
+  function updateAuthUi(session){
+    var gate = $("accountGate");
+    var main = document.querySelector("main");
+    var nav = $("nav");
+    var userBadge = $("userHeaderBadge");
+    var userNameEl = $("userAccountName");
+
+    if(session){
+      if(gate) gate.classList.add("hidden");
+      if(main) main.classList.remove("hidden");
+      if(nav) nav.classList.remove("hidden");
+      if(userBadge) userBadge.classList.remove("hidden");
+      if(userNameEl) userNameEl.textContent = session.name;
+    } else {
+      if(gate) gate.classList.remove("hidden");
+      if(main) main.classList.add("hidden");
+      if(nav) nav.classList.add("hidden");
+      if(userBadge) userBadge.classList.add("hidden");
+      setAuthMode("login");
+    }
+  }
+
+  function setAuthMode(mode){
+    currentAuthMode = mode;
+    var titleEl = $("authTitle");
+    var subEl = $("authSub");
+    var btnEl = $("authSubmitBtn");
+    var toggleText = $("authToggleText");
+    var toggleBtn = $("authToggleBtn");
+    var confWrap = $("confirmPasswordWrap");
+    var errEl = $("authError");
+
+    if(!titleEl) return;
+    errEl.classList.add("hidden");
+    errEl.textContent = "";
+
+    if(mode === "login"){
+      titleEl.textContent = "Sign in to your Account";
+      subEl.textContent = "Manage your expenses and insights securely.";
+      btnEl.textContent = "Sign In";
+      confWrap.classList.add("hidden");
+      toggleText.textContent = "Don't have an account?";
+      toggleBtn.textContent = "Create Account";
+    } else if(mode === "register"){
+      titleEl.textContent = "Create New Account";
+      subEl.textContent = "Track your expenses across all your devices.";
+      btnEl.textContent = "Create Account";
+      confWrap.classList.remove("hidden");
+      toggleText.textContent = "Already have an account?";
+      toggleBtn.textContent = "Sign In";
+    } else if(mode === "forgot"){
+      titleEl.textContent = "Reset Account Password";
+      subEl.textContent = "Enter your email and set a new password.";
+      btnEl.textContent = "Update Password & Sign In";
+      confWrap.classList.remove("hidden");
+      toggleText.textContent = "Remember your password?";
+      toggleBtn.textContent = "Sign In";
+    }
+  }
+
+  function handleAuthSubmit(){
+    var email = ($("authEmail").value || "").trim().toLowerCase();
+    var pass = $("authPassword").value || "";
+    var conf = $("authConfirmPassword").value || "";
+    var keep = $("authKeep").checked;
+    var errEl = $("authError");
+
+    function showError(msg){
+      errEl.textContent = msg;
+      errEl.classList.remove("hidden");
+    }
+
+    if(!email){
+      showError("Please enter your email or username.");
+      return;
+    }
+    if(!pass){
+      showError("Please enter your password.");
+      return;
+    }
+
+    var accounts = getStoredAccounts();
+
+    if(currentAuthMode === "login"){
+      var match = accounts.find(function(a){
+        return a.email.toLowerCase() === email || (a.username && a.username.toLowerCase() === email);
+      });
+      if(!match){
+        showError("Account not found. Click 'Create Account' below to sign up.");
+        return;
+      }
+      if(match.pass && match.pass !== pass){
+        showError("Incorrect password. Try again or click 'Forgot?'.");
+        return;
+      }
+      setSession(match, keep);
+      toast("Welcome back, " + (match.name || match.email) + "!");
+      renderDashboard();
+
+    } else if(currentAuthMode === "register"){
+      if(pass.length < 4){
+        showError("Password should be at least 4 characters.");
+        return;
+      }
+      if(pass !== conf){
+        showError("Passwords do not match.");
+        return;
+      }
+      var existing = accounts.find(function(a){
+        return a.email.toLowerCase() === email || (a.username && a.username.toLowerCase() === email);
+      });
+      if(existing){
+        showError("An account with this email/username already exists. Please sign in.");
+        return;
+      }
+      var newAcc = {
+        email: email,
+        username: email.split("@")[0],
+        name: email.split("@")[0],
+        pass: pass
+      };
+      accounts.push(newAcc);
+      try{ localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts)); }catch(e){}
+      setSession(newAcc, keep);
+      toast("Account created successfully!");
+      renderDashboard();
+
+    } else if(currentAuthMode === "forgot"){
+      if(pass.length < 4){
+        showError("New password should be at least 4 characters.");
+        return;
+      }
+      if(pass !== conf){
+        showError("Passwords do not match.");
+        return;
+      }
+      var target = accounts.find(function(a){
+        return a.email.toLowerCase() === email || (a.username && a.username.toLowerCase() === email);
+      });
+      if(!target){
+        target = { email: email, username: email.split("@")[0], name: email.split("@")[0], pass: pass };
+        accounts.push(target);
+      } else {
+        target.pass = pass;
+      }
+      try{ localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts)); }catch(e){}
+      setSession(target, keep);
+      toast("Password updated! Logged in.");
+      renderDashboard();
+    }
+  }
+
+  function initAuth(){
+    var session = getActiveSession();
+    if(!session && !localStorage.getItem("has_seen_login_v1")){
+      var defAcc = getStoredAccounts()[0];
+      setSession(defAcc, true);
+      try{ localStorage.setItem("has_seen_login_v1", "true"); }catch(e){}
+      session = defAcc;
+    }
+
+    updateAuthUi(session);
+
+    if($("authSubmitBtn")) $("authSubmitBtn").onclick = handleAuthSubmit;
+    if($("authForm")) $("authForm").onsubmit = function(e){ e.preventDefault(); handleAuthSubmit(); };
+    if($("authToggleBtn")) $("authToggleBtn").onclick = function(e){
+      e.preventDefault();
+      setAuthMode(currentAuthMode === "login" ? "register" : "login");
+    };
+    if($("forgotPassLink")) $("forgotPassLink").onclick = function(e){
+      e.preventDefault();
+      setAuthMode("forgot");
+    };
+    if($("quickLoginBtn")) $("quickLoginBtn").onclick = function(){
+      var def = getStoredAccounts()[0];
+      setSession(def, true);
+      toast("Logged in as " + def.name);
+      renderDashboard();
+    };
+    if($("logoutBtn")) $("logoutBtn").onclick = function(){
+      clearSession();
+      toast("Logged out successfully");
+    };
+  }
+
+  // Initial setup
+  deduplicateLocalRecords();
+  $("date").value = today();
+  $("dashMonth").value = today().slice(0,7);
+  initTheme();
+  renderCategoryGrid();
+  initAuth();
+  switchView("input");
+})();
+</script>
+</body>
+</html>
